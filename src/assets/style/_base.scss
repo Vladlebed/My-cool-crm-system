@@ -1,0 +1,162 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing:border-box;
+  list-style: none;
+  text-decoration: none;
+  outline: 0;
+  border: none;
+}
+
+$container-width-xxxxl: 2000px;
+$container-width-xxxl: 1750px;
+$container-width-xxl: 1450px;
+
+$container-width-xl: 1140px;
+$container-width-lg: 960px;
+$container-width-md: 720px;
+$container-width-sm: 540px;
+$container-width-xs: 100%;
+
+$breakpoint-xxxlg: 3100px;
+$breakpoint-xxlg: 2000px;
+$breakpoint-xlg: 1499px;
+
+$breakpoint-lg: 1199px;
+$breakpoint-md: 959px;
+$breakpoint-sm: 767px;
+$breakpoint-xs: 575px;
+$indent-space: 15px;
+$prefix: col;
+$grid_size: 12;
+
+@mixin breakpoint($name) {
+    @if $name == xs {
+        @media screen and (max-width: $breakpoint-xs) {
+            @content
+        }
+    } @else if $name == sm {
+        @media screen and (max-width: $breakpoint-sm) {
+            @content
+        }
+    } @else if $name == md {
+        @media screen and (max-width: $breakpoint-md) {
+            @content
+        }
+    } @else if $name == lg {
+        @media screen and (max-width: $breakpoint-lg) {
+            @content
+        }
+    } @else if $name == xl {
+        @media screen and (max-width: $breakpoint-xlg) {
+            @content
+        }
+    } @else if $name == xxl {
+        @media screen and (max-width: $breakpoint-xxlg) {
+            @content
+        }
+    } @else if $name == xxxl {
+        @media screen and (max-width: $breakpoint-xxxlg) {
+            @content
+        }
+    }
+}
+
+.container {
+  width: $container-width-xxxxl;
+    padding: {
+        right: $indent-space;
+        left: $indent-space;
+    }
+    margin: {
+        right: auto;
+        left: auto;
+    }
+    &-fluid {
+        width: 100%;
+        padding: {
+            right: $indent-space;
+            left: $indent-space;
+        }
+        margin: {
+            right: auto;
+            left: auto;
+        }
+    }
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: {
+      right: -$indent-space;
+      left: -$indent-space;
+    }
+}
+
+.#{$prefix} {
+    flex: auto;
+    padding: {
+        left: $indent-space;
+        right: $indent-space;
+    }
+}
+
+@for $i from 1 through $grid_size {
+  .#{$prefix}-#{$i} {
+      max-width: percentage($i / $grid_size);
+      flex: 0 0 percentage($i / $grid_size);
+      padding: {
+        left: $indent-space;
+        right: $indent-space;
+      }
+      margin-bottom: 10px;   
+    }
+    .#{$prefix}-offset-#{$i} {
+      margin: {
+        left: percentage($i / $grid_size);
+      }
+    }
+}
+
+@each $size in xxxl, xxl, xl, lg, md, sm, xs {
+
+  @include breakpoint(#{$size}) {
+
+    @for $i from 1 through $grid_size {
+      .#{$prefix}-#{$size}-#{$i} {
+          max-width: percentage($i / $grid_size);
+          flex: 0 0 percentage($i / $grid_size);
+          padding: {
+            left: $indent-space;
+            right: $indent-space;
+          }
+        }
+        .#{$prefix}-#{$size}-offset-#{$i} {
+          margin: {
+            right: percentage($i / $grid_size);
+          }
+        }
+    }
+
+    .container {
+      @if $size == xs {
+          max-width: $container-width-xs;
+        } @else if $size == sm {
+          max-width: $container-width-sm;
+        } @else if $size == md {
+          max-width: $container-width-md;
+        } @else if $size == lg {
+          max-width: $container-width-lg;
+        } @else if $size == xl {
+          max-width: $container-width-xl;
+        } @else if $size == xxl {
+          max-width: $container-width-xxl;
+        } @else if $size == xxxl {
+          max-width: $container-width-xxxl;
+        }
+    }
+
+  }
+
+}

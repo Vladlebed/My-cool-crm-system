@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Auth from './Auth'
 import namesOfTypes from '@/assets/namesOfTypes'
 import randomMoments from '@/assets/randomMoments'
+import firebase from 'firebase/app'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		auth:false,
-		money:40000,
+		money:0,
 		todo:[
 			{id:0,text:'Покурить', dateCreate:'18.11.2020, 23:00',dateComplited:null, complited: false}
 		],
@@ -26,13 +27,16 @@ export default new Vuex.Store({
 		],
 		namesOfTypes,
 		randomMoments,
+		debts:[
+			{me:true,name:'Илья',description:'Масло',value:45,date:'21.11.2020',deadline:false,complited:false},
+			{me:true,name:'Илья',description:'Вареники лол',value:45,date:'22.11.2020',deadline:false,complited:false},
+			{me:false,name:'Мама',description:'Выкуп барабанов у Некита',value:10000,date:'22.11.2020',deadline:'31.12.2020',complited:false},
+		],
 		income:[
 			{name:'Зарплата',value:40000,date:'16.11.2020',isIncome:true},
 		],
 		expenses:[
 			{name:'Хранение байка',value:1000,date:'07.11.2020',type:'motorcycle',isIncome:false},
-			// {name:'Магазин',value:170,date:'17.11.2020',type:'food',isIncome:false},
-			// {name:'Магазин',value:200,date:'15.11.2020',type:'food',isIncome:false},
 		]
 	},
 	mutations: {
@@ -62,9 +66,35 @@ export default new Vuex.Store({
 		},
 		addTodoIdCount(state){
 			state.todoIdCount++
+		},
+		changeDebt(state,debt){
+			state.debts.push(debt)
+		},
+		addDebts(state,debt){
+			state.debts.push(debt)
+		},
+		changeDebt(state,id,value,date){
+			let debt = state.debts.find(t => t.id === t)
+			if(value){
+				debt.value = value
+				debt.history.push({date,value})
+			} else {
+				debt.complited = !debt.complited
+			}
 		}
 	},
+	// modules:{
+	// 	Auth
+	// },
 	actions: {
+		async login({dispatch,commit},{email,password}){
+			try {
+				await firebase.auth().signInWithEmailAndPassword(email, password)
+			} catch(e) {
+				throw e
+				console.log(e)
+			}
+		},
 		createEvent({commit},event){
 			commit('createEvent',event)
 		},
@@ -82,6 +112,12 @@ export default new Vuex.Store({
 		},
 		addTodoIdCount({commit}){
 			commit('addTodoIdCount')
+		},
+		changeDebt({commit},id,value,date){
+			commit('changeDebt',id,value,date)
+		},
+		addDebts({commit},debt){
+			commit('addDebts',debt)
 		}
 	},
 	modules: {
@@ -95,6 +131,7 @@ export default new Vuex.Store({
 		namesOfTypes: s=> s.namesOfTypes,
 		randomMoments: s=> s.randomMoments,
 		todoList: s=> s.todo,
-		todoIdCount: s=> s.todoIdCount
+		todoIdCount: s=> s.todoIdCount,
+		debts: s=> s.debts
 	}
 })

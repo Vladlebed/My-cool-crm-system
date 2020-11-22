@@ -1,43 +1,64 @@
 <template>
     <div id="app">
-        <header>
+        <header v-if="auth">
             <div class="container">
                 <div class="row">
                     <div class="col-3 header-col">
                         <p class="title">
                             Месяц: {{momentGetMonth()}}
-                        </p>                        
+                        </p>                                               
+                    </div>
+                    <div class="col-3 header-col">
+<!--                         <p class="title">
+                            Месяц: {{momentGetMonth()}}
+                        </p> -->                                               
+                    </div>
+                    <div class="col-3 header-col">
+<!--                         <p class="title">
+                            Месяц: {{momentGetMonth()}}
+                        </p> -->                                               
+                    </div>
+                    <div class="col-3 header-col">
+                        <button @click="logout">
+                            Выйти
+                        </button>                                               
                     </div>                
                 </div>
             </div>            
         </header>
         
-
         <div class="container">
             <transition name="fade" mode="out-in">
                 <router-view />
             </transition>
         </div>
+
         <notifications group="foo" position="bottom left"/>
     </div>
 </template>
 
 <script>
-import moment from 'moment';
+import moment from 'moment'
+import axios from 'axios'
 export default{
     name:'app',
     data(){
         return{
-            auth: true
+            auth: false
         }
     },
     methods:{
         momentGetMonth(){
             return moment(new Date()).locale('ru').format('MMMM')
+        },
+        async logout(){
+            await this.$store.dispatch('logout')
+            this.$router.push('/login')
         }
+        // setTypes
     },
     mounted(){
-        // !this.auth ? this.$router.push('/') : false
+
     }
 }
 </script>
@@ -108,6 +129,7 @@ p
     color: var(--text)
 
 input[type="text"],
+input[type="password"],
 select
     width: 100%
     height: 40px

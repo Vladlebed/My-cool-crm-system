@@ -2,11 +2,11 @@
     <div class="full-screen">
         <div class="container">
             <div class="row">
-                <div class="col-2 col-lg-3 col-md-4 col-sm-5 col-offset-5">
+                <div class="col-4 col-md-4 col-sm-5 col-offset-4">
                     <div class="col-grid">
                         <form @submit.prevent="auth">
-                            <p>Логин</p>
-                            <input type="text" v-model="login">                
+                            <p>Email</p>
+                            <input type="text" v-model="email">                
                             <p>Пароль</p>
                             <input type="password" v-model="password">
                             <button type="submit">Вход</button>
@@ -23,14 +23,21 @@ export default{
     name:'register',
     data(){
         return {
-            login: '',
-            password: ''
+            email: '', //testmail@gmail.com
+            password: '' //12341234
         }
     },
     methods:{
-        auth(){
-            this.$router.push('/')
-            console.log(this.login,this.password)
+        async auth(){
+            try {
+                await this.$store.dispatch('login',{email:this.email,password:this.password})
+                .then(()=>{
+                    this.$router.push('/')
+                })
+            } catch(e) {
+                console.log(e);
+            }
+
         }
     }
 }   

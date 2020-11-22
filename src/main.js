@@ -5,6 +5,10 @@ import router from './router'
 import store from './store'
 import Notifications from 'vue-notification'
 
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
+
 Vue.config.productionTip = false
 
 const globalMethods = {
@@ -49,15 +53,33 @@ const globalMethods = {
 			.reverse()
 			.join('') + subfix			
 		}
-	}
+	},
   }
 }
 
 Vue.use(Notifications)
 Vue.mixin(globalMethods)
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+firebase.initializeApp({
+	apiKey: "AIzaSyB8u1jKgcxlVeRva1QmUYHhZ0m_8-r7Hsg",
+	authDomain: "my-cool-crm.firebaseapp.com",
+	databaseURL: "https://my-cool-crm.firebaseio.com",
+	projectId: "my-cool-crm",
+	storageBucket: "my-cool-crm.appspot.com",
+	messagingSenderId: "1129947099",
+	appId: "1:1129947099:web:fae016581a7349b41311fe"
+})
+
+let app
+
+firebase.auth().onAuthStateChanged(()=>{
+	if(!app){
+		app = new Vue({
+		  router,
+		  store,
+		  render: h => h(App)
+		}).$mount('#app')		
+	}
+})
+
+

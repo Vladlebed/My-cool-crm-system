@@ -1,5 +1,5 @@
 <template>
-	<div class="col-3 col-sm-12">
+	<div class="col-3 col-md-6 col-sm-12">
 		<div class="col-grid">
 			<form @submit.prevent="createEvent">
 				<p class="title">Добавить событие</p>

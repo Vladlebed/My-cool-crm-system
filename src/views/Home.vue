@@ -3,14 +3,21 @@
 	    <div class="row">
 	        <div class="col-3 col-md-6 col-sm-12">
 	            <div class="col-grid col-grid--auto-height">
-	                <p class="title">Мой карман: {{moneyFormatting(money)}}</p>
+	                <p class="title">Мой карман:
+	                	<template v-if="money">
+	                		{{moneyFormatting(money)}}
+	                	</template>
+	                	<template v-else>
+	                		пусто
+	                	</template>
+	                </p>
 	            </div>
 	            <TodoList :complited="false" :todos="displayTodo(false)"/>
 	        </div>
 	        <div class="col-3 col-md-6 col-sm-12">
 	            <div class="col-grid">
 	                <p class="title">Мои доходы:</p>
-	                <div class="list">
+	                <vue-custom-scrollbar class="list">
 	                	<div class="list-element" v-for="incomeElement in income">
 	                		<p class="list-element__name">{{incomeElement.name}}</p>
 	                		<p>Сумма: {{moneyFormatting(incomeElement.value)}}</p>
@@ -19,13 +26,13 @@
 	                	<div class="list-element" v-if="!income.length">
 	                		<p>Доходов нет</p>                		
 	                	</div>
-	                </div>
+	                </vue-custom-scrollbar>
 	            </div>
 	        </div>
 	        <div class="col-3 col-md-6 col-sm-12">
 	            <div class="col-grid">
 	                <p class="title">Мои расходы:</p>
-	                <div class="list">
+	                <vue-custom-scrollbar class="list">
 	                	<div class="list-element" v-for="expenditure in expenses">
 	                		<p class="list-element__name">{{expenditure.name}}</p>
 	                		<p>Сумма: {{moneyFormatting(expenditure.value)}}</p>
@@ -35,12 +42,12 @@
 	                	<div class="list-element" v-if="!expenses.length">
 	                		<p>Пока расходов нет</p>                		
 	                	</div>
-	                </div>
+	                </vue-custom-scrollbar>
 	            </div>
 	        </div>
 	        <div class="col-3 col-md-6 col-sm-12">
 	            <div class="col-grid">
-	            	<div class="list">
+	            	<vue-custom-scrollbar class="list">
 	            		<p class="title">Сводка за месяц:</p>
 	            		<Chart :chartCategories="chartCategories()" :chartData="chartData()" v-if="expenses.length"/>
 	            		<div class="list-element">
@@ -49,38 +56,40 @@
 	            		<div class="list-element">
 	                		<p class="list-element__name">Всего потрачено: {{summary(false)}}</p>          			
 	            		</div>
-	            	</div>
-
+	            	</vue-custom-scrollbar>
 	            </div>
 	        </div>
 	    </div>
 	    <div class="row">
-		    <createEvent />
-		    <createTodo />    	
+		    <CreateEvent />
+		    <CreateTodo />    	
 	        <div class="col-3 col-md-6 col-sm-12">
 	            <TodoList :complited="true" :todos="displayTodo(true)"/>
 	        </div>
-	        <changeType />
+	        <Debts />
 	    </div>
 	</div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import changeType from '@/components/Home/changeType'
-import createEvent from '@/components/Home/createEvent'
+import { mapGetters } from 'vuex'
+import CreateEvent from '@/components/Home/CreateEvent'
 import Chart from '@/components/Home/Chart'
 import TodoList from '@/components/Home/TodoList'
-import createTodo from '@/components/Home/CreateTodo'
-import moment from 'moment';
+import CreateTodo from '@/components/Home/CreateTodo'
+import Debts from '@/components/Home/Debts'
+import moment from 'moment'
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+import "vue-custom-scrollbar/dist/vueScrollbar.css"
 export default {
 	name: 'Home',
 	components: {
-		changeType,
-		createEvent,
+		CreateEvent,
 		Chart,
-		createTodo,
+		CreateTodo,
 		TodoList,
+		Debts,
+		vueCustomScrollbar
 	},
 	computed:{
 	    ...mapGetters([
@@ -161,7 +170,7 @@ export default {
 	text-align: center
 
 .list
-	max-height: 600px
+	max-height: 610px
 	overflow-y: hidden
 	.list-element
 		padding: 7px 0
@@ -171,6 +180,10 @@ export default {
 			font-size: 17px
 		&__date
 			font-size: 12px
+		&__description
+			font-size: 16px
+			font-style: italic
+			padding: 5px 0px 
 		button
 			margin-top: 10px
 

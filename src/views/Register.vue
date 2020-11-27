@@ -6,17 +6,13 @@
                     <div class="col-grid">
                         <form @submit.prevent="auth">
                             <p>Email</p>
-                            <input type="text" v-model="email">                
+                            <input type="text" v-model="email"> 
+                            <p>Имя</p>
+                            <input type="text" v-model="name">                
                             <p>Пароль</p>
                             <input type="password" v-model="password">
-                            <button type="submit">Вход</button>
-                        </form>
-                        <p>
-                            Нет аккаунта?                         
-                            <router-link to="/register">
-                                Регистрация
-                            </router-link>
-                        </p>         
+                            <button type="submit">Регистрация</button>
+                        </form>                            
                     </div>    
                 </div>
             </div>
@@ -29,14 +25,16 @@ export default{
     name:'register',
     data(){
         return {
-            email: '', //testmail@gmail.com
-            password: '' //12341234
+            email: '',
+            password: '',
+            name: '',
+            startCapital: '',
         }
     },
     methods:{
         async auth(){
             try {
-                await this.$store.dispatch('login',{email:this.email,password:this.password})
+                await this.$store.dispatch('register',{email:this.email,password:this.password,name:this.name})
                 .then(()=>{
                     this.$router.push('/')
                 })

@@ -11,7 +11,7 @@ export default new Vuex.Store({
 	state: {
 		money:0,
 		todo:[
-			{id:0,text:'Покурить', dateCreate:'18.11.2020, 23:00',dateComplited:null, complited: false}
+			{id:0,text:'Посмотреть фильм', dateCreate:'18.11.2020, 23:00',dateComplited:null, complited: false}
 		],
 		todoIdCount:1,
 		typesConsumption:[
@@ -28,6 +28,7 @@ export default new Vuex.Store({
 		namesOfTypes,
 		randomMoments,
 		debts:[
+			{me:true,name:'Илья',description:'На хуйню',value:200,date:'25.11.2020',deadline:false,complited:false},
 			{me:true,name:'Илья',description:'Масло',value:45,date:'21.11.2020',deadline:false,complited:false},
 			{me:true,name:'Илья',description:'Вареники лол',value:45,date:'22.11.2020',deadline:false,complited:false},
 			{me:false,name:'Мама',description:'Выкуп барабанов у Некита',value:10000,date:'22.11.2020',deadline:'31.12.2020',complited:false},
@@ -94,6 +95,23 @@ export default new Vuex.Store({
 				throw e
 				console.log(e)
 			}
+		},
+		async register({dispatch},{email,password,name}){
+			try{
+				await firebase.auth().createUserWithEmailAndPassword(email,password)
+				const uid = await dispatch('getUid')
+				await firebase.database().ref(`/users/${uid}/info`).set({
+					bill: 0,
+					name,
+				})
+			} catch(e){
+				throw e
+				console.log(e)
+			}
+		},
+		getUid(){
+			const user = firebase.auth().currentUser
+			return user ? user.uid : null
 		},
 		createEvent({commit},event){
 			commit('createEvent',event)

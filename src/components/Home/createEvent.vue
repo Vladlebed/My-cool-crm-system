@@ -1,29 +1,27 @@
 <template>
-	<div class="col-3 col-md-6 col-sm-12">
-		<div class="col-grid">
-			<form @submit.prevent="createEvent">
-				<p class="title">Добавить событие</p>
-				<select v-model="isIncome">
-					<option :value="true">
-						Доход
-					</option>				
-					<option :value="false">
-						Расход
-					</option>
-				</select>
-				<input type="text" v-model="name" :placeholder=" 'Например: ' + randomPlaceholder(false)">
-				<input type="text" v-model="value" placeholder="500">
-				<select v-model="type" v-if="!isIncome">
-					<option :value="null" disabled>Выбери тип</option>
-					<option v-for="(type,i) in typesConsumption" :value="type" :selected="!i">
-						{{formattingTypeName(type,namesOfTypes)}}
-					</option>
-				</select>
-				<button type="submit">
-					Добавить
-				</button>				
-			</form>
-		</div>
+	<div>
+		<form @submit.prevent="createEvent">
+			<p class="title">Добавить событие</p>
+			<select v-model="isIncome">
+				<option :value="true">
+					Доход
+				</option>				
+				<option :value="false">
+					Расход
+				</option>
+			</select>
+			<input type="text" v-model="name" :placeholder=" 'Например: ' + randomPlaceholder(false)">
+			<input type="text" v-model="value" placeholder="500">
+			<select v-model="type" v-if="!isIncome">
+				<option :value="null" disabled>Выбери тип</option>
+				<option v-for="(type,i) in typesConsumption" :value="type" :selected="!i">
+					{{formattingTypeName(type,namesOfTypes)}}
+				</option>
+			</select>
+			<button type="submit">
+				Добавить
+			</button>				
+		</form>		
 	</div>
 </template>
 

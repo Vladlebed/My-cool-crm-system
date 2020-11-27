@@ -1,38 +1,11 @@
 <template>
-    <div id="app">
-        <header v-if="auth">
-            <div class="container">
-                <div class="row">
-                    <div class="col-3 header-col">
-                        <p class="title">
-                            Месяц: {{momentGetMonth()}}
-                        </p>                                               
-                    </div>
-                    <div class="col-3 header-col">
-<!--                         <p class="title">
-                            Месяц: {{momentGetMonth()}}
-                        </p> -->                                               
-                    </div>
-                    <div class="col-3 header-col">
-<!--                         <p class="title">
-                            Месяц: {{momentGetMonth()}}
-                        </p> -->                                               
-                    </div>
-                    <div class="col-3 header-col">
-                        <button @click="logout">
-                            Выйти
-                        </button>                                               
-                    </div>                
-                </div>
-            </div>            
-        </header>
-        
+    <div id="app">    
         <div class="container">
             <transition name="fade" mode="out-in">
                 <router-view />
             </transition>
         </div>
-
+        <Menu />            
         <notifications group="foo" position="bottom left"/>
     </div>
 </template>
@@ -40,8 +13,12 @@
 <script>
 import moment from 'moment'
 import axios from 'axios'
+import Menu from '@/components/Interface/Menu'
 export default{
     name:'app',
+    components:{
+        Menu
+    },
     data(){
         return{
             auth: false
@@ -72,6 +49,7 @@ export default{
         --primary: rgb(12, 108, 242);
         --d-primary: rgb(12, 108, 242);
         --text-other: #fff;        
+        --dark: #000;        
     }
 </style>
 
@@ -79,21 +57,8 @@ export default{
 body
     font-family: 'Inter', sans-serif
 
-header
-    background: var(--primary)
-    // border-bottom: 1px solid var(--text-other)
-    .title
-        color: var(--text-other)
-        margin: 0
-        padding: 0
-    .header-col
-        height: 100%
-        display: flex
-        align-items: center
-        height: 40px
-
 .col-grid
-    margin-top: 10px
+    margin: 5px 0
     padding: 10px
     background: var(--grid)
     border-radius: 7px
@@ -151,4 +116,58 @@ button
     font-weight: 600
     border-radius: 7px
     cursor: pointer
+
+.title
+    border-bottom: 2px solid var(--primary)
+    padding-bottom: 5px
+    // margin-bottom: 5px
+    display: flex
+    justify-content: space-between
+    align-items: center
+    input
+        border-bottom: none
+        width: 110px
+        height: 35px
+        padding: 4px 7px 
+        background: var(--primary)
+        color: var(--text-other)
+        border-radius: 5px
+        &::placeholder
+            color: var(--text-other)
+    &.no-border
+        border: none
+
+.text-centred
+    text-align: center
+
+.list
+    height: 410px
+    overflow-y: hidden
+    &.height-auto
+        height: auto
+    .list-element
+        position: relative 
+        padding: 7px 0
+        border-bottom: 2px solid var(--primary)
+        &:hover
+            i
+                opacity: 1
+        &__name
+            font-weight: 500
+            font-size: 17px
+            display: flex
+            justify-content: space-between
+            i
+                font-size: 17px
+                opacity: 0
+                cursor: pointer
+
+        &__date
+            font-size: 12px
+        &__description
+            font-size: 16px
+            font-style: italic
+            padding: 5px 0px 
+        button
+            margin-top: 10px
 </style>

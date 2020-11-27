@@ -54,6 +54,15 @@ const globalMethods = {
 			.join('') + subfix			
 		}
 	},
+	displayList(list,search){
+		if(!search) return list
+		else {
+			let re = new RegExp(search, 'i') 
+			return list.filter((el) => {
+				return re.test(JSON.stringify(el)) ? true : false
+			})
+		}		
+	}
   }
 }
 

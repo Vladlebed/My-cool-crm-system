@@ -7,18 +7,17 @@
 				<button type="submit">Создать задание</button>
 			</form>
 		</div>
-		<ChangeType />
+		
 	</div>
 </template>
 
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import ChangeType from '@/components/Home/ChangeType'
 export default{
 	name:"createTodo",
 	components:{
-		ChangeType
+		
 	},
 	computed:{
 	    ...mapGetters([

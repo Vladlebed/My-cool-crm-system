@@ -11,7 +11,7 @@
                             <input type="text" v-model="name">                
                             <p>Пароль</p>
                             <input type="password" v-model="password">
-                            <button type="submit">Регистрация</button>
+                            <button type="submit" class="crm-btn">Регистрация</button>
                         </form>                            
                     </div>    
                 </div>

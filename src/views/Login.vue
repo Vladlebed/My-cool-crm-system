@@ -9,7 +9,7 @@
                             <input type="text" v-model="email">                
                             <p>Пароль</p>
                             <input type="password" v-model="password">
-                            <button type="submit">Вход</button>
+                            <button type="submit" class="crm-btn">Вход</button>
                         </form>
                         <p>
                             Нет аккаунта?                         

@@ -25,6 +25,12 @@
 				</div>
 				<span class="link__text">Apps</span>
 			</router-link>
+			<router-link class="menu__element link" to="/goals-and-dreams" active-class="active">
+				<div class="link__icon">
+					<i class="fa fa-heart" aria-hidden="true"></i>
+				</div>
+				<span class="link__text">Dream</span>
+			</router-link>
 			<div class="menu__element link bottom" to="/" active-class="active">
 				<div class="link__icon">
 					<i class="fa fa-sign-out" aria-hidden="true"></i>

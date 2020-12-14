@@ -4,7 +4,7 @@
 			<p class="title">Создать задание</p>
 			<form @submit.prevent="addTodo">
 				<input type="text" v-model="text" placeholder="Что-то сделать">
-				<button type="submit">Создать задание</button>
+				<button type="submit" class="crm-btn">Создать задание</button>
 			</form>
 		</div>
 		

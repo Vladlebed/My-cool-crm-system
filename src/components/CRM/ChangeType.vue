@@ -77,6 +77,7 @@ export default{
 	max-height: 230px
 	display: flex
 	flex-wrap: wrap
+	max-width: 320px
 	.emoji
 		font-size: 12px
 		display: block
@@ -87,6 +88,9 @@ export default{
 .list
 	margin-top: 12px
 
+.title
+	margin: 10px
+
 .fa-times
 	cursor: pointer
 
@@ -95,4 +99,5 @@ export default{
 	justify-content: center
 	.vc-chrome
 		width: 100%
+		box-shadow: none
 </style>

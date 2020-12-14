@@ -14,10 +14,10 @@
 	    			Выполнено: {{todo.dateComplited}}
 	    		</p>
 	    		<template>
-		    		<button @click="$store.dispatch('changeTodoStatus',{id:todo.id})" v-if="complited">
+		    		<button @click="$store.dispatch('changeTodoStatus',{id:todo.id})" class="crm-btn" v-if="complited" >
 		    			Обратно в список задач
 		    		</button>
-		    		<button @click="todoComplited(todo.id)" v-else>
+		    		<button @click="todoComplited(todo.id)" class="crm-btn" v-else>
 		    			Сделано
 		    		</button>
 	    		</template>

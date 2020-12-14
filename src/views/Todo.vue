@@ -18,8 +18,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import TodoList from '@/components/Home/TodoList'
-import CreateTodo from '@/components/Home/CreateTodo'
+import TodoList from '@/components/Todo/TodoList'
+import CreateTodo from '@/components/Todo/CreateTodo'
 import vueCustomScrollbar from 'vue-custom-scrollbar'
 import "vue-custom-scrollbar/dist/vueScrollbar.css"
 export default {

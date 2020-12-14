@@ -4,7 +4,6 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import Notifications from 'vue-notification'
-
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'

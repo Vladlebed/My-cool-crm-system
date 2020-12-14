@@ -9,35 +9,40 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		money:0,
+		money:100,
 		todo:[
 			{id:0,text:'Посмотреть фильм', dateCreate:'18.11.2020, 23:00',dateComplited:null, complited: false}
 		],
 		todoIdCount:1,
 		typesConsumption:[
-			'food',
-			'fun',
-			'housing',
-			'motorcycle',
-			'alco',
-			'sigar',
-			'energy',
-			'trouble',
-			'other',
+			{id:1,name:'Еда',icon:'🍏',chartColor:'rgba(255, 99, 132, 0.2)'},
+			{id:2,name:'Развлечения',icon:'😎',chartColor:'rgba(255, 99, 132, 0.2)'},
+			{id:3,name:'Аренда квартиры',icon:'💰',chartColor:'rgba(255, 99, 132, 0.2)'},
+			{id:4,name:'Мотоцикл',icon:'💕',chartColor:'rgba(255, 99, 132, 0.2)'},
+			{id:5,name:'Алкоголь',icon:'🍺',chartColor:'rgba(255, 99, 132, 0.2)'},
+			{id:6,name:'Сигареты',icon:'🔪',chartColor:'rgba(255, 99, 132, 0.2)'},
+			{id:7,name:'Энергетики',icon:'🍼',chartColor:'rgba(255, 99, 132, 0.2)'},
+			{id:8,name:'Нежданы',icon:'🦆',chartColor:'rgba(255, 99, 132, 0.2)'},
+			{id:9,name:'Остальные',icon:'📦',chartColor:'rgba(255, 99, 132, 0.2)'},
 		],
 		namesOfTypes,
 		randomMoments,
 		debts:[
-			{me:true,name:'Илья',description:'На хуйню',value:200,date:'25.11.2020',deadline:false,complited:false},
-			{me:true,name:'Илья',description:'Масло',value:45,date:'21.11.2020',deadline:false,complited:false},
-			{me:true,name:'Илья',description:'Вареники лол',value:45,date:'22.11.2020',deadline:false,complited:false},
-			{me:false,name:'Мама',description:'Выкуп барабанов у Некита',value:10000,date:'22.11.2020',deadline:'31.12.2020',complited:false},
+			{me:true,name:'Илья',description:'Роллы',value:495,date:'08.12.2020',complited:false},
+			{me:true,name:'Илья',description:'На хуйню',value:200,date:'25.11.2020',complited:false},
+			{me:true,name:'Илья',description:'Вареники лол',value:45,date:'22.11.2020',complited:true},
+			{me:false,name:'Мама',description:'Выкуп барабанов у Некита',value:10000,date:'22.11.2020',complited:false},
+			{me:true,name:'Илья',description:'Масло',value:45,date:'21.11.2020',complited:true},
+			{me:true,name:'Илья',description:'Часть суммы от аренды квартиры на осетинской',value:300,date:'14.11.2020',complited:false},
+		],
+		debtsIncome:[
+			{me:true,name:'Илья',description:'Купил пиво',value:90,date:'11.12.2020'},
 		],
 		income:[
-			{name:'Зарплата',value:40000,date:'16.11.2020',isIncome:true},
+			// {name:'Зарплата',value:40000,date:'16.11.2020',isIncome:true},
 		],
 		expenses:[
-			{name:'Хранение байка',value:1000,date:'07.11.2020',type:'motorcycle',isIncome:false},
+			// {name:'Хранение байка',value:1000,date:'07.11.2020',type:'motorcycle',isIncome:false},
 		]
 	},
 	mutations: {
@@ -73,6 +78,9 @@ export default new Vuex.Store({
 		},
 		addDebts(state,debt){
 			state.debts.push(debt)
+		},
+		addDebtsIcnome(state,debt){
+			state.debtsIncome.push(debt)
 		},
 		changeDebt(state,id,value,date){
 			let debt = state.debts.find(t => t.id === t)
@@ -136,6 +144,9 @@ export default new Vuex.Store({
 		},
 		addDebts({commit},debt){
 			commit('addDebts',debt)
+		},
+		addDebtsIcnome({commit},debt){
+			commit('addDebtsIcnome',debt)
 		}
 	},
 	modules: {
@@ -150,6 +161,7 @@ export default new Vuex.Store({
 		randomMoments: s=> s.randomMoments,
 		todoList: s=> s.todo,
 		todoIdCount: s=> s.todoIdCount,
-		debts: s=> s.debts
+		debts: s=> s.debts,
+		debtsIncome: s=> s.debtsIncome,
 	}
 })

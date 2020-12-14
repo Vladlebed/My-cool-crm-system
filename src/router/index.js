@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import CRM from '../views/CRM.vue'
 import Todo from '../views/Todo.vue'
+import GoalsAndDreams from '../views/GoalsAndDreams.vue'
 import Bad from '../views/Bad.vue'
 
 Vue.use(VueRouter)
@@ -34,6 +35,11 @@ const routes = [
     path: '/todo',
     name: 'Todo',
     component: Todo
+  },    
+  {
+    path: '/goals-and-dreams',
+    name: 'Goals-and-Dreams',
+    component: GoalsAndDreams
   },  
   {
     path: '*',

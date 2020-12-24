@@ -2,7 +2,7 @@
     <div class="full-screen">
         <div class="container">
             <div class="row">
-                <div class="col-4 col-md-4 col-sm-5 col-offset-4">
+                <div class="col-4 col-md-12 centred">
                     <div class="col-grid">
                         <form @submit.prevent="auth">
                             <p>Email</p>
@@ -50,5 +50,6 @@ export default{
 </script>
 
 <style lang="sass">
-    
+    .centred
+        margin: 0 auto
 </style>

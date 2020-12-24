@@ -1,58 +1,34 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Auth from './Auth'
-import namesOfTypes from '@/assets/namesOfTypes'
 import randomMoments from '@/assets/randomMoments'
 import firebase from 'firebase/app'
+import moment from 'moment'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		money:100,
-		todo:[
-			{id:0,text:'Посмотреть фильм', dateCreate:'18.11.2020, 23:00',dateComplited:null, complited: false}
-		],
+		money:0,
+		todo:[],
 		todoIdCount:1,
-		typesConsumption:[
-			{id:1,name:'Еда',icon:'🍏',chartColor:'rgba(255, 99, 132, 0.2)'},
-			{id:2,name:'Развлечения',icon:'😎',chartColor:'rgba(255, 99, 132, 0.2)'},
-			{id:3,name:'Аренда квартиры',icon:'💰',chartColor:'rgba(255, 99, 132, 0.2)'},
-			{id:4,name:'Мотоцикл',icon:'💕',chartColor:'rgba(255, 99, 132, 0.2)'},
-			{id:5,name:'Алкоголь',icon:'🍺',chartColor:'rgba(255, 99, 132, 0.2)'},
-			{id:6,name:'Сигареты',icon:'🔪',chartColor:'rgba(255, 99, 132, 0.2)'},
-			{id:7,name:'Энергетики',icon:'🍼',chartColor:'rgba(255, 99, 132, 0.2)'},
-			{id:8,name:'Нежданы',icon:'🦆',chartColor:'rgba(255, 99, 132, 0.2)'},
-			{id:9,name:'Остальные',icon:'📦',chartColor:'rgba(255, 99, 132, 0.2)'},
-		],
-		namesOfTypes,
+		typesConsumption:[],
 		randomMoments,
-		debts:[
-			{me:true,name:'Илья',description:'Роллы',value:495,date:'08.12.2020',complited:false},
-			{me:true,name:'Илья',description:'На хуйню',value:200,date:'25.11.2020',complited:false},
-			{me:true,name:'Илья',description:'Вареники лол',value:45,date:'22.11.2020',complited:true},
-			{me:false,name:'Мама',description:'Выкуп барабанов у Некита',value:10000,date:'22.11.2020',complited:false},
-			{me:true,name:'Илья',description:'Масло',value:45,date:'21.11.2020',complited:true},
-			{me:true,name:'Илья',description:'Часть суммы от аренды квартиры на осетинской',value:300,date:'14.11.2020',complited:false},
-		],
-		debtsIncome:[
-			{me:true,name:'Илья',description:'Купил пиво',value:90,date:'11.12.2020'},
-		],
-		income:[
-			// {name:'Зарплата',value:40000,date:'16.11.2020',isIncome:true},
-		],
-		expenses:[
-			// {name:'Хранение байка',value:1000,date:'07.11.2020',type:'motorcycle',isIncome:false},
-		]
+		debts:[],
+		debtsIncome:[],
+		income:[],
+		expenses:[]
 	},
 	mutations: {
-		createEvent(state,event){
-			if(event.isIncome) {
-				state.income.push(event) 
-				state.money += event.value
+		async createEvent(state,event){
+			if(event.body.isIncome) {
+				state.income.push(event.body) 
+				state.money += event.body.value
+				await firebase.database().ref(`/users/${event.uid}/transactions/${event.month}/income`).push(event.body)
 			} else {
-				state.expenses.push(event)
-				state.money -= event.value
+				state.expenses.push(event.body)
+				state.money -= event.body.value
+				await firebase.database().ref(`/users/${event.uid}/transactions/${event.month}/expenses`).push(event.body)
 			}
 		},
 		addTodo(state,todo){
@@ -90,6 +66,85 @@ export default new Vuex.Store({
 			} else {
 				debt.complited = !debt.complited
 			}
+		},
+		setMoneyCount(state,moneyCount){
+			state.money = moneyCount
+		},
+		setTransactions(state,transactions){
+			if(transactions){
+				const transactionsIncomeArray = []
+				const transactionsExpensesArray = []
+				if(transactions.income){
+					Object.keys(transactions.income).forEach((key) => {
+						transactionsIncomeArray.push({
+							name: transactions.income[key].name,
+							value: transactions.income[key].value,
+							date: transactions.income[key].date,
+							isIncome: transactions.income[key].isIncome,
+							id: key
+						})					
+					})
+				}
+				if(transactions.expenses){
+					Object.keys(transactions.expenses).forEach((key) => {
+						transactionsExpensesArray.push({
+							name: transactions.expenses[key].name,
+							value: transactions.expenses[key].value,
+							date: transactions.expenses[key].date,
+							type: transactions.expenses[key].type,
+							isIncome: transactions.expenses[key].isIncome,
+							id: key
+						})					
+					})
+				}
+				state.income = transactionsIncomeArray || []
+				state.expenses = transactionsExpensesArray || []
+			} else {
+				state.income.length = 0
+				state.expenses.length = 0
+				console.log(state.income)
+			}
+
+		},
+		setTypesConsumption(state,typesConsumption){
+			state.typesConsumption = typesConsumption
+		},
+		setDebts(state,debts){
+			if(debts){
+				const debtsActual = []
+				const debtsComplited = []
+				if(debts.actual){
+					Object.keys(debts.actual).forEach((key) => {
+						debtsActual.push({
+							me: debts.actual[key].me,
+							name: debts.actual[key].name,
+							value: debts.actual[key].value,
+							date: debts.actual[key].date,
+							description: debts.actual[key].description,
+							complited: debts.actual[key].complited,
+							id: key
+						})					
+					})
+				}
+				if(debts.completed){
+					Object.keys(debts.completed).forEach((key) => {
+						debtsComplited.push({
+							me: debts.completed[key].me,
+							name: debts.completed[key].name,
+							value: debts.completed[key].value,
+							date: debts.completed[key].date,
+							description: debts.completed[key].description,
+							complited: debts.completed[key].complited,
+							id: key
+						})					
+					})
+				}
+				state.debts = debtsActual
+				state.debtsIncome = debtsComplited				
+			} else {
+				state.debts.length = 0
+				state.debtsIncome.length = 0				
+			}
 		}
 	},
 	// modules:{
@@ -109,7 +164,7 @@ export default new Vuex.Store({
 				await firebase.auth().createUserWithEmailAndPassword(email,password)
 				const uid = await dispatch('getUid')
 				await firebase.database().ref(`/users/${uid}/info`).set({
-					bill: 0,
+					money: 0,
 					name,
 				})
 			} catch(e){
@@ -117,12 +172,65 @@ export default new Vuex.Store({
 				console.log(e)
 			}
 		},
+		async getMoneyCount({dispatch,commit}){
+			try {
+				const uid = await dispatch('getUid')
+				const money = (await firebase.database().ref(`/users/${uid}/info/money`).once('value')).val() || 0
+				commit('setMoneyCount',money)
+			} catch(e) {
+				console.log(e);
+			}			
+		},
+		async getTypesConsumption({dispatch,commit}){
+			try {
+				const uid = await dispatch('getUid')
+				const typesConsumption = (await firebase.database().ref(`/users/${uid}/typesConsumption`).once('value')).val()
+				commit('setTypesConsumption',typesConsumption)
+			} catch(e) {
+				console.log(e);
+			}			
+		},
+		async getTodos({dispatch,commit}){
+			try {
+				const uid = await dispatch('getUid')
+				const todos = (await firebase.database().ref(`/users/${uid}/todo`).once('value')).val()
+			} catch(e) {
+				console.log(e);
+			}			
+		},
+		async getDebts({dispatch,commit}){
+			try {
+				const uid = await dispatch('getUid')
+				const debts = (await firebase.database().ref(`/users/${uid}/debts`).once('value')).val()
+				commit('setDebts',debts)	
+			} catch(e) {
+				console.log(e);
+			}			
+		},
+		async getTransactions({dispatch,commit},{date}){
+			try {
+				const uid = await dispatch('getUid')
+				const transactions = (await firebase.database().ref(`/users/${uid}/transactions/${date}`).once('value')).val()
+				commit('setTransactions',transactions)
+				return true
+			} catch(e) {
+				console.log(e);
+			}			
+		},
 		getUid(){
 			const user = firebase.auth().currentUser
 			return user ? user.uid : null
 		},
-		createEvent({commit},event){
+		async createEvent({dispatch,commit},event){
+			event.uid = await dispatch('getUid')
 			commit('createEvent',event)
+		},
+		async setMoneyCount({dispatch,commit},money){
+			const uid = await dispatch('getUid')
+			await firebase.database().ref(`/users/${uid}/info`).update({
+				money
+			})
+			commit('setMoneyCount',money)
 		},
 		addTodo({commit},todo){
 			commit('addTodo',todo)
@@ -142,12 +250,19 @@ export default new Vuex.Store({
 		changeDebt({commit},id,value,date){
 			commit('changeDebt',id,value,date)
 		},
-		addDebts({commit},debt){
+		async addDebts({dispatch,commit},debt){
+			const uid = await dispatch('getUid')
+			await firebase.database().ref(`/users/${uid}/debts/actual`).push(debt)
 			commit('addDebts',debt)
 		},
-		addDebtsIcnome({commit},debt){
+		async addDebtsIcnome({dispatch,commit},debt){
+			const uid = await dispatch('getUid')
+			await firebase.database().ref(`/users/${uid}/debts/completed`).push(debt)
 			commit('addDebtsIcnome',debt)
-		}
+		},
+	    async logout({commit}) {
+			await firebase.auth().signOut()
+	    }		
 	},
 	modules: {
 
@@ -157,7 +272,6 @@ export default new Vuex.Store({
 		typesConsumption: s=> s.typesConsumption,
 		income: s=> s.income,
 		expenses: s=> s.expenses,
-		namesOfTypes: s=> s.namesOfTypes,
 		randomMoments: s=> s.randomMoments,
 		todoList: s=> s.todo,
 		todoIdCount: s=> s.todoIdCount,

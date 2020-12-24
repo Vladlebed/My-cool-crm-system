@@ -12,20 +12,14 @@ Vue.config.productionTip = false
 
 const globalMethods = {
   methods: {
-	formattingTypeName(name,namesOfTypes){
-		if(namesOfTypes && namesOfTypes.find(t => t.value === name)){
-			return namesOfTypes.find(t => t.value === name).translate
-		}
-		return name
+	formattingTypeName(name,typesList){
+		const resultName = typesList.find(t => t.translite === name) || undefined
+		return resultName ? `${resultName.name} ${resultName.icon}` : name
 	},
-	// Вот тут мне пришлось немного поднарпячь мозги
-	// На вход есть число, которое должно разделяться разделителем
-	// через одну тысячу, миллион, и т.д.
-	// Т.е. пробел через каждые 3 символа... Ооокей
 	moneyFormatting(money){
 		const subfix = '₽'
 		const separator = '.'
-		if(money.length < 4) return money + subfix //Нафига напрягать лишний раз кампудахтер)
+		if(money.length < 4) return money + subfix
 		else {
 			// Переводим число в строку и пробегаемся циклом, 
 			// добавляя кажыдй символ в новый массив

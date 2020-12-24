@@ -7,6 +7,7 @@ import CRM from '../views/CRM.vue'
 import Todo from '../views/Todo.vue'
 import GoalsAndDreams from '../views/GoalsAndDreams.vue'
 import Bad from '../views/Bad.vue'
+import firebase from 'firebase/app'
 
 Vue.use(VueRouter)
 
@@ -14,6 +15,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
+    meta: {layout: 'main', auth: true},
     component: Home
   },
   {
@@ -29,16 +31,19 @@ const routes = [
   {
     path: '/crm',
     name: 'CRM',
+    meta: {layout: 'main', auth: true},
     component: CRM
   },   
   {
     path: '/todo',
     name: 'Todo',
+    meta: {layout: 'main', auth: true},
     component: Todo
   },    
   {
     path: '/goals-and-dreams',
     name: 'Goals-and-Dreams',
+    meta: {layout: 'main', auth: true},
     component: GoalsAndDreams
   },  
   {
@@ -52,6 +57,17 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const currentUser = firebase.auth().currentUser
+  const requireAuth = to.matched.some(record => record.meta.auth)
+
+  if (requireAuth && !currentUser) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router

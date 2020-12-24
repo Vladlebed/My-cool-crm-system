@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<canvas ref="canvas" height="300"></canvas>
+		<canvas ref="canvas" class="chart"></canvas>
 	</div>
 </template>
 
@@ -10,7 +10,7 @@ import { Doughnut } from 'vue-chartjs'
 export default {
 	extends: Doughnut,
 	name:'Chart',
-	props:['chartCategories','chartData'],
+	props:['chartCategories','chartData','chartColors'],
 	computed:{
 	    ...mapGetters([
 	      'typesConsumption',
@@ -22,26 +22,8 @@ export default {
 		        datasets: [{
 		            label: '# of Votes',
 		            data: this.chartData,
-		            backgroundColor: [
-		                'rgba(255, 99, 132, 0.2)',
-		                'rgba(54, 162, 235, 0.2)',
-		                'rgba(255, 206, 86, 0.2)',
-		                'rgba(75, 192, 192, 0.2)',
-		                'rgba(153, 102, 255, 0.2)',
-		                'rgba(255, 159, 64, 0.2)',
-		                'rgba(255, 159, 64, 0.2)',
-		                'rgba(255, 159, 64, 0.2)',
-		            ],
-		            borderColor: [
-		                'rgba(255, 99, 132, 1)',
-		                'rgba(54, 162, 235, 1)',
-		                'rgba(255, 206, 86, 1)',
-		                'rgba(75, 192, 192, 1)',
-		                'rgba(153, 102, 255, 1)',
-		                'rgba(255, 159, 64, 1)',
-		                'rgba(255, 159, 64, 1)',
-		                'rgba(255, 159, 64, 1)',
-		            ],
+		            backgroundColor: this.setChartColors(false),
+		            borderColor: this.setChartColors(true),
 		            borderWidth: 1
 		        }]			
 			}	
@@ -63,9 +45,13 @@ export default {
 				labels.push(this.formattingTypeName(el,this.namesOfTypes))
 			});
 			return labels
+		},
+		setChartColors(isBorder){
+			return [...this.chartColors]
 		}
 	},
 	mounted(){
+		console.log(this.renderChartData)
 		this.renderChart(this.renderChartData,this.options)
 	},
 	watch: {
@@ -76,6 +62,8 @@ export default {
 }
 </script>
 
-<style>
-	
+<style lang="sass" scoped>
+	.chart
+		width: 290px
+		height: 290px
 </style>

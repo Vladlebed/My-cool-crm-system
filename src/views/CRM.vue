@@ -3,20 +3,16 @@
 		<div class="row">
 			<div class="col-12">
 				<div class="col-grid header">
-					<p class="title no-border">Выбранный год и месяц: {{momentGetMonth()}}</p>
-					<div class="select-month">
-						<p>Выбранный год и месяц</p>
-						<date-picker v-model="month" format="MM-YYYY" type="month" placeholder="Select month"></date-picker>
-					</div>	
+					<date-picker v-model="month" format="MM-YYYY" type="month" placeholder="Select month"></date-picker>
 				</div>
 			</div>
 		</div>
 	    <div class="row">
 	        <div class="col-3 col-md-6 col-sm-12">
-	            <div class="col-grid" v-if="isLoad">
+	            <div class="col-grid" v-if="transactionsLoad.load">
 	                <p class="title">Мои доходы: <input type="text" placeholder="Поиск" v-model="searchIncome"></p>
 	                <vue-custom-scrollbar class="list">
-	                	<div class="list-element" v-for="incomeElement in displayList(income,searchIncome)">
+	                	<div class="list-element" v-for="incomeElement in displayList(income,searchIncome).slice().reverse()">
 	                		<p class="list-element__name">{{incomeElement.name}} <i class="fa fa-times" aria-hidden="true"></i></p>
 	                		<p>Сумма: {{moneyFormatting(incomeElement.value)}}</p>
 	                		<p>Дата: {{incomeElement.date}}</p>
@@ -36,17 +32,17 @@
 	            </div>
 	        </div>
 	        <div class="col-3 col-md-6 col-sm-12">
-	            <div class="col-grid" v-if="isLoad">
+	            <div class="col-grid" v-if="transactionsLoad.load">
 	                <p class="title">Мои расходы: <input type="text" placeholder="Поиск" v-model="searchExpenses"></p>
 	                <vue-custom-scrollbar class="list">
-	                	<div class="list-element" v-for="expenditure in displayList(expenses,searchExpenses)">
+	                	<div class="list-element" v-for="expenditure in displayList(expenses,searchExpenses).slice().reverse()">
 	                		<p class="list-element__name">{{expenditure.name}} <i class="fa fa-times" aria-hidden="true"></i></p>
 	                		<p>Сумма: {{moneyFormatting(expenditure.value)}}</p>
-	                		<p>На что: {{expenditure.type.name + expenditure.type.icon}}</p>
+	                		<p>На что: {{`${formattingTypeName(expenditure.type,typesConsumption)}`}}</p>
 	                		<p>Дата: {{expenditure.date}}</p>                		
 	                	</div>
 	                	<div class="list-element" v-if="!expenses.length">
-	                		<p>Пока расходов нет</p>                		
+	                		<p>Расходов нет</p>                		
 	                	</div>
 	                	<div class="list-element" v-if="expenses.length && !displayList(expenses,searchExpenses).length">
 	                		<p>Ничего не найдено</p>                		
@@ -60,7 +56,7 @@
 	            </div>
 	        </div>
 	        <div class="col-3 col-md-6 col-sm-12">
-	            <div class="col-grid" v-if="isLoad">
+	            <div class="col-grid" v-if="transactionsLoad.load">
 	            	<vue-custom-scrollbar class="list height-auto">
 		                <p class="title no-border">Мой карман:
 		                	<template v-if="money">
@@ -87,8 +83,8 @@
 	            </div>
 	        </div>
 	        <div class="col-3 col-md-6 col-sm-12">
-	        	<div class="col-grid" v-if="isLoad">
-	        		<CreateEvent />
+	        	<div class="col-grid" v-if="transactionsLoad.load">
+	        		<CreateEvent :month="month"/>
 	        		<button class="crm-btn" @click="modalShow = true">Добавить / изменить тип расходов</button>
 	        	</div>
 	            <div class="col-grid grid-loader-box" v-else>
@@ -99,17 +95,29 @@
 	        </div>
 	    </div>
 	    <div class="row">
-	    	<div class="col-4 col-sm-12">
-	    		<Debts v-if="isLoad" :income="false"/>
-	    	</div>
-	    	<div class="col-4 col-sm-12">
-	    		<Debts v-if="isLoad" :income="true"/>
-	    	</div>
-	    	<div class="col-4 col-sm-12">
-	    		<div class="col-grid" v-if="isLoad" >
-	    			<p class="title">График: </p>
+	    	<div class="col-8 col-md-12">
+	    		<div class="col-grid" v-if="transactionsLoad.load" >
+	    			<p class="title">Общий график: </p>
 	    			<div class="chart-box">
-	    				<Chart :chartCategories="chartCategories()" :chartData="chartData()" v-if="expenses.length"/>
+	    			
+	    			</div>
+	    		</div>
+	            <div class="col-grid grid-loader-box" v-else>
+	            	<div class="grid-loader-box__loader">
+	            		
+	            	</div>
+	            </div>	    		
+	    	</div>
+	    	<div class="col-4 col-sm-12">
+	    		<div class="col-grid" v-if="transactionsLoad.load" >
+	    			<p class="title">График по категориям: </p>
+	    			<div class="chart-box">
+	    				<Chart 
+		    				:chartCategories="chartCategories()" 
+		    				:chartData="chartData()" 
+		    				:chartColors="chartColors()" 
+		    				v-if="expenses.length"
+	    				/>
 	    			</div>
 	    		</div>
 	            <div class="col-grid grid-loader-box" v-else>
@@ -117,6 +125,20 @@
 	            		
 	            	</div>
 	            </div>
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-4 col-sm-12">
+	    		<Debts v-if="transactionsLoad.load" :income="false"/>
+	    	</div>
+	    	<div class="col-4 col-sm-12">
+	    		<Debts v-if="transactionsLoad.load" :income="true"/>
+	    	</div>
+	    	<div class="col-4 col-sm-12">
+	    		<div class="col-grid">
+	    			<p class="title">Заметки</p>
+	    			<textarea name="" id="" cols="30" rows="10" class="notes" placeholder="Ну и нафига они нужны?"></textarea>
+	    		</div>
 	    	</div>
 	    </div>
 	    <transition name="fade" mode="out-in">
@@ -160,13 +182,19 @@ export default{
 	      'todoIdCount'
 	    ])
 	},
+	filters: {
+
+	},
 	data(){
 		return{
 			isLoad: true,
-			month: null,
+			month: new Date(),
 			searchIncome: '',
 			searchExpenses: '',
-			modalShow: false
+			modalShow: false,
+			transactionsLoad:{
+				load: false
+			}
 		}
 	},
 	methods:{
@@ -174,7 +202,7 @@ export default{
 			let result = 0
 			if(type){
 				this.expenses.forEach(el => {
-					if(el.type === type){
+					if(el.type === type.translite){
 						result += el.value
 					}
 				})					
@@ -189,9 +217,16 @@ export default{
 		chartCategories(){
 			const labels = []
 			this.typesConsumption.forEach((el)=> {
-				labels.push(el.name)
+				labels.push(el.name + el.icon)
 			});
 			return labels
+		},
+		chartColors(){
+			const colors = []
+			this.typesConsumption.forEach((el)=> {
+				colors.push(el.chartColor)
+			});
+			return colors			
 		},
 		chartData(){
 			const chartData = []
@@ -199,9 +234,26 @@ export default{
 				chartData.push(this.summary(el,true))
 			});
 			return chartData
+		}
+	},
+	async created(){
+		this.$store.dispatch('getMoneyCount')
+		this.$store.dispatch('getTypesConsumption')
+		await this.$store.dispatch('getTransactions',{date: moment(this.month).format('MM-YYYY')})
+		this.transactionsLoad.load = true
+	},
+	mounted(){
+		
+	},
+	watch:{
+		month: function () {
+			this.$store.dispatch('getTransactions',{date: moment(this.month).format('MM-YYYY')})
 		},
-		momentGetMonth(){
-			return moment(new Date()).locale('ru').format('MMMM')
+		money: function(oldValue,newValue) {
+			if(oldValue != newValue){
+				console.log('запуск!')
+				this.$store.dispatch('setMoneyCount', this.money)
+			}
 		}
 	}
 }
@@ -210,12 +262,12 @@ export default{
 <style lang="sass">
 	.header
 		display: flex
-		justify-content: space-between
+		justify-content: center
+		align-items: center
 		padding: 0 10px
 	.list
 		height: 300px
 	.chart-box
-		width: 350px
 		margin: 0 auto
 		canvas
 		    margin-top: 20px
@@ -231,6 +283,13 @@ export default{
 			border-top: 4px solid transparent
 			animation: speen .7s linear infinite
 			border-radius: 50%
+	.notes
+		width: 100%
+		max-height: 100%
+		padding: 15px 0
+		font-size: 16px
+		font-family: 'Inter', sans-serif;
+		font-weight: 600
 </style>
 
 <style lang="scss">

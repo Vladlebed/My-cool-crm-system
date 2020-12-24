@@ -150,6 +150,8 @@ button.crm-btn
         position: relative 
         padding: 7px 0
         border-bottom: 2px solid var(--primary)
+        i
+            margin-right: 10px
         &:hover
             i
                 opacity: 1

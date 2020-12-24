@@ -1,17 +1,19 @@
 <template>
 	<div class="col-grid">
+		
 		<p class="title search">
 			<template v-if="!income">
 				Долги / Должники	
 			</template>
 			<template v-else>
-				Приход по долгам
+				Закрытые долги
 			</template> 
 			<input type="text" placeholder="Поиск" v-model="search">
 		</p>
+
 		<template v-if="!income">
 			<vue-custom-scrollbar class="list">
-				<div class="list-element me" v-for="debt in displayList(debts,search)" :class="{me:debt.me,someone:!debt.me}">
+				<div class="list-element me" v-for="debt in displayList(debts,search).slice().reverse()" :class="{me:debt.me,someone:!debt.me}">
 		    		<p class="list-element__name">
 		    			{{debt.name}} <i class="fa fa-times" aria-hidden="true"></i>
 		    		</p>
@@ -35,10 +37,13 @@
 			<p>Всего мне должны: {{moneyFormatting(debtsSum(true))}}</p>
 			<p>Всего я должнен: {{moneyFormatting(debtsSum(false))}}</p>			
 		</template>
+
 		<template v-else>
 			<vue-custom-scrollbar class="list">
-				<div class="list-element me" v-for="debtIncome in displayList(debtsIncome,search)">
+				<div class="list-element me" v-for="debtIncome in displayList(debtsIncome,search).slice().reverse()">
 		    		<p class="list-element__name">
+		    			<template v-if="!income">Кому я отдал: </template>
+		    			<template v-else>Кто мне отдал: </template>
 		    			{{debtIncome.name}} <i class="fa fa-times" aria-hidden="true"></i>
 		    		</p>
 		    		<p class="list-element__description">
@@ -89,11 +94,8 @@ export default{
 				el.me ? debtsToMe += el.value : myDebts += el.value
 			})
 
-			console.log(debtsToMe)
-
 			if(this.debtsIncome){
 				this.debtsIncome.forEach(el => {
-					console.log(el)
 					if(el.me){
 						debtsToMe -= el.value
 					} else {
@@ -102,13 +104,14 @@ export default{
 				})
 			}
 
-			console.log(debtsToMe)
-
 			return forMe ? debtsToMe : myDebts
 		}
 	},
+	created(){
+		this.$store.dispatch('getDebts')
+	},
 	mounted(){
-		console.log(this.debtsIncome,this.debtsIncome)
+
 	}
 }	
 </script>
@@ -126,6 +129,8 @@ export default{
 		&.someone
 			border-left: 4px solid #F93131
 			background: rgba(249, 49, 49,0.1)
+	i
+		margin-right: 15px
 	button
 		max-width: 300px
 </style>

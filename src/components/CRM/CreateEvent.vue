@@ -19,12 +19,12 @@
 			<input type="text" v-model="name" placeholder="Кто мне должен / Кому я должен" v-if="isIncome === 'debt'">
 			<input type="text" v-model="name" placeholder="Кто мне вернул / Кому я вернул" v-if="isIncome === 'debtRefund'">
 			<input type="text" v-model="text" placeholder="Описание">
-			<input type="text" v-model="value" placeholder="500">
+			<input type="text" v-model.number="value" placeholder="Сумма">
 			<select v-model="type" v-if="!isIncome || isIncome === 'debt' || isIncome === 'debtRefund'">
 				<option :value="null" disabled>Выбери категорию</option>
 
 				<template v-if="isIncome != 'debt' && isIncome != 'debtRefund'">
-					<option v-for="(type,i) in typesConsumption" :value="type" :selected="!i">
+					<option v-for="(type,i) in typesConsumption" :value="type.translite" :selected="!i">
 						{{type.name + type.icon}}
 					</option>
 				</template>
@@ -49,8 +49,10 @@
 <script>
 import { mapGetters } from 'vuex';
 import moment from 'moment';
+import { transliterate as tr, slugify } from 'transliteration';
 export default{
 	name:'createEvent',
+	props:['month'],
 	computed:{
 	    ...mapGetters([
 	      'typesConsumption',
@@ -102,17 +104,39 @@ export default{
 					this.$store.dispatch('addDebts',event).then(()=> {
 						this.name = null
 						this.value = null
-						this.description = null
+						this.text = null
+						this.date = moment(new Date()).format('DD.MM.YYYY')
+						this.isIncome = true
+					})
+				}
+				if(this.isIncome === "debtRefund"){
+					const event = {
+						me: this.type,
+						name: this.name,
+						description: this.text,
+						value: this.value,
+						date: moment(new Date()).format('DD.MM.YYYY'),
+						complited: false
+					}
+					console.log(event)
+					this.$store.dispatch('addDebtsIcnome',event).then(()=> {
+						this.name = null
+						this.value = null
+						this.text = null
 						this.date = moment(new Date()).format('DD.MM.YYYY')
 						this.isIncome = true
 					})
 				} else {	
 					const event = {
-						name: this.text,
-						value: +this.value,
-						date: this.date,
-						type: null,
-						isIncome: this.isIncome ? true : false 
+						body: {
+							name: this.text,
+							value: +this.value,
+							date: this.date,
+							type: null,
+							uid: null,
+							isIncome: this.isIncome ? true : false
+						},
+						month: moment(this.month).format('MM-YYYY')
 					}
 					this.$store.dispatch('createEvent',event).then(()=> {
 						this.name = null
@@ -124,13 +148,17 @@ export default{
 			} 
 			else{
 				const event = {
-					name: this.text,
-					value: +this.value,
-					date: this.date,
-					type: this.type,
-					isIncome: this.isIncome ? true : false 
+					body: {
+						name: this.text,
+						value: +this.value,
+						date: this.date,
+						type: this.type,
+						uid: null,
+						isIncome: this.isIncome ? true : false						
+					},
+					month: moment(this.month).format('MM-YYYY')
 				}
-				this.$store.dispatch('createEvent',event).then(()=> {
+				this.$store.dispatch('createEvent',event,event,moment(this.month).format('MM-YYYY')).then(()=> {
 					this.name = null
 					this.value = null
 					this.date = moment(new Date()).format('DD.MM.YYYY')

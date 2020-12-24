@@ -31,7 +31,7 @@
 				</div>
 				<span class="link__text">Dream</span>
 			</router-link>
-			<div class="menu__element link bottom" to="/" active-class="active">
+			<div class="menu__element link bottom" @click.prevent="logout" active-class="active">
 				<div class="link__icon">
 					<i class="fa fa-sign-out" aria-hidden="true"></i>
 				</div>
@@ -47,6 +47,12 @@ export default{
 	data(){
 		return {
 
+		}
+	},
+	methods:{
+		async logout() {
+			await this.$store.dispatch('logout')
+			this.$router.push('/login')
 		}
 	}
 }

@@ -14,7 +14,7 @@
 	    			Выполнено: {{todo.dateComplited}}
 	    		</p>
 	    		<template>
-		    		<button @click="$store.dispatch('changeTodoStatus',{id:todo.id})" class="crm-btn" v-if="complited" >
+		    		<button @click="changeTodoStatus(todo.id)" class="crm-btn" v-if="complited" >
 		    			Обратно в список задач
 		    		</button>
 		    		<button @click="todoComplited(todo.id)" class="crm-btn" v-else>
@@ -45,9 +45,12 @@ export default{
 		vueCustomScrollbar
 	},
 	methods:{
-		todoComplited(todoId){
-			const dateComplited = moment(new Date).format('DD.MM.YYYY, HH:mm')
-			this.$store.dispatch('changeTodoStatus',{id:todoId,date:dateComplited})
+		todoComplited(id){
+			const date = moment(new Date).format('DD.MM.YYYY, HH:mm')
+			this.$store.dispatch('changeTodoStatus',{id,date})
+		},
+		changeTodoStatus(id){
+			this.$store.dispatch('changeTodoStatus',{id})
 		}
 	},
 	data(){

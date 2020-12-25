@@ -177,7 +177,6 @@ export default{
 	      'typesConsumption',
 	      'income',
 	      'expenses',
-	      'namesOfTypes',
 	      'todoList',
 	      'todoIdCount'
 	    ])

@@ -22,9 +22,7 @@ export default{
 	computed:{
 	    ...mapGetters([
 	      'typesConsumption',
-	      'namesOfTypes',
-	      'randomMoments',
-	      'todoIdCount'
+	      'randomMoments'
 	    ])
 	},
 	data(){
@@ -34,9 +32,6 @@ export default{
 		}
 	},
 	methods:{
-		generateTodoId(){
-			return this.todoIdCount
-		},
 		setTime(){
 			return moment(new Date).format('DD.MM.YYYY, HH:mm')
 		},
@@ -50,8 +45,7 @@ export default{
 				});
 				return			
 			}
-			const todo = {id:this.generateTodoId(),text:this.text,dateCreate:this.date,complited:false}
-			this.$store.dispatch('addTodoIdCount')
+			const todo = {text:this.text,dateCreate:this.date,complited:false}
 			this.$store.dispatch('addTodo',todo)
 			this.text = ''
 		}

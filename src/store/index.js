@@ -11,13 +11,12 @@ export default new Vuex.Store({
 	state: {
 		money:0,
 		todo:[],
-		todoIdCount:1,
 		typesConsumption:[],
-		randomMoments,
 		debts:[],
 		debtsIncome:[],
 		income:[],
-		expenses:[]
+		expenses:[],
+		randomMoments,
 	},
 	mutations: {
 		async createEvent(state,event){
@@ -45,9 +44,6 @@ export default new Vuex.Store({
 		},
 		removeTodo(state,id){
 			state.todo.splice(state.todo.findIndex(t => t.id === id),1)
-		},
-		addTodoIdCount(state){
-			state.todoIdCount++
 		},
 		changeDebt(state,debt){
 			state.debts.push(debt)
@@ -145,6 +141,23 @@ export default new Vuex.Store({
 				state.debts.length = 0
 				state.debtsIncome.length = 0				
 			}
+		},
+		setTodos(state,todos){
+			if(todos){
+				const todosArray = []
+				Object.keys(todos).forEach((key) => {
+					todosArray.push({
+						text: todos[key].text,
+						dateCreate: todos[key].dateCreate,
+						dateComplited: todos[key].dateComplited,
+						complited: todos[key].complited,
+						id: key
+					})					
+				})
+				state.todo = todosArray			
+			} else {
+				state.todo.length = 0
+			}
 		}
 	},
 	// modules:{
@@ -194,6 +207,7 @@ export default new Vuex.Store({
 			try {
 				const uid = await dispatch('getUid')
 				const todos = (await firebase.database().ref(`/users/${uid}/todo`).once('value')).val()
+				commit('setTodos',todos)
 			} catch(e) {
 				console.log(e);
 			}			
@@ -232,20 +246,35 @@ export default new Vuex.Store({
 			})
 			commit('setMoneyCount',money)
 		},
-		addTodo({commit},todo){
-			commit('addTodo',todo)
+		async addTodo({dispatch,commit},todo){
+			const uid = await dispatch('getUid')
+			await firebase.database().ref(`/users/${uid}/todo`).push(todo)
+			dispatch('getTodos')
 		},
-		changeTodoStatus({commit},data){
-			commit('changeTodoStatus',data)
+		async changeTodoStatus({dispatch,commit},todoChange){
+			const uid = await dispatch('getUid')
+			const todoState = (await firebase.database().ref(`/users/${uid}/todo/${todoChange.id}`).once('value')).val()
+			if(todoChange.date){
+				await firebase.database().ref(`/users/${uid}/todo/${todoChange.id}`).update({
+					complited: true,
+					dateComplited: todoChange.date
+				})				
+				dispatch('getTodos')
+				// await firebase.database().ref(`/users/${uid}/todo/${todo.id}`).update(todo)
+			} else {
+				await firebase.database().ref(`/users/${uid}/todo/${todoChange.id}`).update({
+					complited: false,
+					dateComplited: null
+				})
+				dispatch('getTodos')				
+			}
+			// commit('changeTodoStatus',todo)
 		},
 		editTodo({commit},id,todo){
 			commit('editTodo',id,todo)
 		},
 		removeTodo({commit},id){
 			commit('removeTodo',id)
-		},
-		addTodoIdCount({commit}){
-			commit('addTodoIdCount')
 		},
 		changeDebt({commit},id,value,date){
 			commit('changeDebt',id,value,date)

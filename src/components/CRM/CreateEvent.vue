@@ -56,7 +56,6 @@ export default{
 	computed:{
 	    ...mapGetters([
 	      'typesConsumption',
-	      'namesOfTypes',
 	      'randomMoments',
 	    ])
 	},

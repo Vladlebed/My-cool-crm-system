@@ -36,7 +36,7 @@ export default {
 	},
 	data(){
 		return{
-
+			isLoad: false
 		}
 	},
 	methods:{
@@ -52,6 +52,10 @@ export default {
 				})				
 			}
 		},
+	},
+	async created(){
+		await this.$store.dispatch('getTodos')
+		this.isLoad = true
 	},
 	mounted(){
 		// console.log(this.summary('food'))

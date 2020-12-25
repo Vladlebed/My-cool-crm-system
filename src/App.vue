@@ -104,7 +104,7 @@ select
     margin-top: 0
     font-family: 'Inter', sans-serif;
 
-button.crm-btn
+.crm-btn,
     width: 100%
     height: 40px
     background: var(--primary)

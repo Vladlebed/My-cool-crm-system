@@ -38,7 +38,7 @@ export default{
             try {
                 await this.$store.dispatch('login',{email:this.email,password:this.password})
                 .then(()=>{
-                    this.$router.push('/crm')
+                    this.$router.push('/')
                 })
             } catch(e) {
                 console.log(e);

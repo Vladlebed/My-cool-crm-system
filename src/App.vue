@@ -5,12 +5,13 @@
                 <router-view />
             </transition>
         </div>
-        <Menu />            
+        <Menu v-if="authState"/>            
         <notifications group="foo" position="bottom left"/>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import axios from 'axios'
 import Menu from '@/components/Interface/Menu'
@@ -18,6 +19,11 @@ export default{
     name:'app',
     components:{
         Menu
+    },
+    computed:{
+        ...mapGetters([
+          'authState'
+        ]),
     },
     data(){
         return{

@@ -6,7 +6,7 @@
                     <p class="bad-page__error-code">404</p>                            
                     <p class="bad-page__text">О нет!</p>                            
                     <p class="bad-page__text">Такой страницы не найдено :(</p>                            
-                    <router-link class="crm-btn bad-page__link" to="/crm">На главную</router-link>                              
+                    <router-link class="crm-btn bad-page__link" to="/">На главную</router-link>                              
                 </div>
             </div>
         </div>

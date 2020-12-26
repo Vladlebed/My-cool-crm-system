@@ -1,10 +1,20 @@
 import firebase from 'firebase/app'
 
 export default{
+	state:{
+		auth: (JSON.parse(localStorage.getItem("auth")) || false )
+	},
+	mutations:{
+		setAuth(state){
+			state.auth = !state.auth
+			localStorage.setItem("auth",state.auth)
+		}
+	},
 	actions:{
 		async login({dispatch,commit},{email,password}){
 			try {
 				await firebase.auth().signInWithEmailAndPassword(email, password)
+				commit('setAuth')
 			} catch(e) {
 				throw e
 				console.log(e)
@@ -18,6 +28,7 @@ export default{
 					money: 0,
 					name,
 				})
+				commit('setAuth')
 			} catch(e){
 				throw e
 				console.log(e)
@@ -25,6 +36,10 @@ export default{
 		},
 	    async logout({commit}) {
 			await firebase.auth().signOut()
+			commit('setAuth')
 	    }
 	},
+	getters:{
+		authState: s => s.auth
+	}
 }

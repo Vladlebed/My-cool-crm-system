@@ -2,7 +2,7 @@
     <div class="full-screen">
         <div class="container">
             <div class="row">
-                <div class="col-4 col-md-4 col-sm-5 col-offset-4">
+                <div class="col-4 col-md-12 centred">
                     <div class="col-grid">
                         <form @submit.prevent="auth">
                             <p>Email</p>
@@ -12,7 +12,12 @@
                             <p>Пароль</p>
                             <input type="password" v-model="password">
                             <button type="submit" class="crm-btn">Регистрация</button>
-                        </form>                            
+                        </form>
+                        <p>                       
+                            <router-link to="/login">
+                                Назад 
+                            </router-link>
+                        </p>                             
                     </div>    
                 </div>
             </div>

@@ -24,7 +24,7 @@
 				<option :value="null" disabled>Выбери категорию</option>
 
 				<template v-if="isIncome != 'debt' && isIncome != 'debtRefund'">
-					<option v-for="(type,i) in typesConsumption" :value="type.translite" :selected="!i">
+					<option v-for="(type,i) in Categories" :value="type.translite" :selected="!i">
 						{{type.name + type.icon}}
 					</option>
 				</template>
@@ -55,7 +55,7 @@ export default{
 	props:['month'],
 	computed:{
 	    ...mapGetters([
-	      'typesConsumption',
+	      'Categories',
 	      'randomMoments',
 	    ])
 	},

@@ -7,14 +7,29 @@ import debts from '@/store/modules/CRM/modules/debts'
 export default{
 	state:{
 		money:0,
-		typesConsumption:[],	
+		categories:[],	
 	},
 	mutations:{
 		setMoneyCount(state,moneyCount){
 			state.money = moneyCount
 		},
-		setTypesConsumption(state,typesConsumption){
-			state.typesConsumption = typesConsumption
+		setCategories(state,categories){
+			if(categories){
+				const categoriesArray = []
+				Object.keys(categories).forEach((key) => {
+					categoriesArray.push({
+						name: categories[key].name,
+						chartColor: categories[key].chartColor,
+						icon: categories[key].icon,
+						translite: categories[key].translite,
+						id: key
+					})					
+				})
+				console.log(categoriesArray)
+				state.categories = categoriesArray
+			} else {
+				state.categories = []
+			}
 		},
 	},
 	actions:{
@@ -27,14 +42,25 @@ export default{
 				console.log(e);
 			}			
 		},
-		async getTypesConsumption({dispatch,commit}){
+		async getCategories({dispatch,commit}){
 			try {
 				const uid = await dispatch('getUid')
-				const typesConsumption = (await firebase.database().ref(`/users/${uid}/typesConsumption`).once('value')).val()
-				commit('setTypesConsumption',typesConsumption)
+				const categories = (await firebase.database().ref(`/users/${uid}/categories`).once('value')).val()
+				console.log(categories)
+				commit('setCategories',categories)
 			} catch(e) {
 				console.log(e);
 			}			
+		},
+		async createCategory({dispatch,commit},category){
+			try {
+				console.log(category)
+				const uid = await dispatch('getUid')
+				await firebase.database().ref(`/users/${uid}/categories`).push(category)
+				dispatch('getCategories')
+			} catch(e) {
+				console.log(e);
+			}				
 		},
 		async setMoneyCount({dispatch,commit},money){
 			const uid = await dispatch('getUid')
@@ -46,7 +72,7 @@ export default{
 	},
 	getters:{
 		money: s=> s.money,
-		typesConsumption: s=> s.typesConsumption,		
+		categories: s=> s.categories,		
 	},
 	modules:{
 		transactions,

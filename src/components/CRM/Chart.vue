@@ -13,7 +13,7 @@ export default {
 	props:['chartCategories','chartData','chartColors'],
 	computed:{
 	    ...mapGetters([
-	      'typesConsumption'
+	      'Categories'
 	    ]),
 		renderChartData(){
 			return {
@@ -40,7 +40,7 @@ export default {
 	methods:{
 		getCategories(){
 			const labels = []
-			this.typesConsumption.forEach((el)=> {
+			this.Categories.forEach((el)=> {
 				labels.push(`${el.name} ${el.icon}`)
 			});
 			return labels

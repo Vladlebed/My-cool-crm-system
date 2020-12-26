@@ -1,6 +1,6 @@
 <template>
 	<div class="list height-auto">
-		<input type="text" v-model="type" placeholder="Название">
+		<input type="text" v-model="name" placeholder="Название">
 		<p class="title">
 			Иконка: {{emojiSelected}} 
 			<template v-if="!emojiSelected">не выбрана</template>
@@ -22,7 +22,7 @@
 		<div class="color-picker">
 			<chrome-picker v-model="chartColor"/>
 		</div>
-		<button class="crm-btn">Создать</button>
+		<button class="crm-btn" @click="createCategory()">Создать</button>
 	</div>
 </template>
 
@@ -32,6 +32,7 @@ import emojies from '@/assets/emojies'
 import { Chrome } from 'vue-color'
 import vueCustomScrollbar from 'vue-custom-scrollbar'
 import "vue-custom-scrollbar/dist/vueScrollbar.css"
+import { transliterate as tr, slugify } from 'transliteration';
 export default{
 	name:'ChangeType',
 	components:{
@@ -39,13 +40,11 @@ export default{
 		'chrome-picker': Chrome,
 	},
 	computed:{
-	    // ...mapGetters([
-	    //   'doneTodosCount',
-	    //   'anotherGetter'
-	    //   // ...
-	    // ])
 	    prewview(event){
-	    	return this.type + ' ' + this.emojiSelected
+	    	return this.name + ' ' + this.emojiSelected
+	    },
+	    translite(){
+	    	return tr(this.name)
 	    }
 	},	
 	data(){
@@ -53,13 +52,23 @@ export default{
 			emojiesList: [...emojies],
 			emojiesShow: false,
 			emojiSelected: '',
-			type: '',
+			name: '',
 			chartColor: '',
 		}
 	},
 	methods:{
 		setEmoji(emoji){
-			this.type += emoji
+			this.name += emoji
+		},
+		createCategory(){
+			const category = {
+				chartColor: this.chartColor.hex,
+				name: this.name,
+				icon: this.emojiSelected,
+				translite: this.translite
+			}
+			console.log(category)
+			// this.$store.dispatch('createCategory',category)
 		}
 	},
 	mounted(){

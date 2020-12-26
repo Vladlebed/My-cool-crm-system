@@ -38,7 +38,7 @@
 	                	<div class="list-element" v-for="expenditure in displayList(expenses,searchExpenses).slice().reverse()">
 	                		<p class="list-element__name">{{expenditure.name}} <i class="fa fa-times" aria-hidden="true"></i></p>
 	                		<p>Сумма: {{moneyFormatting(expenditure.value)}}</p>
-	                		<p>На что: {{`${formattingTypeName(expenditure.type,typesConsumption)}`}}</p>
+	                		<p>На что: {{`${formattingTypeName(expenditure.type,categories)}`}}</p>
 	                		<p>Дата: {{expenditure.date}}</p>                		
 	                	</div>
 	                	<div class="list-element" v-if="!expenses.length">
@@ -69,7 +69,7 @@
 	            		<p class="title">Сводка за месяц:</p>
 	            		
 	            		<div class="list-element">
-	                		<p v-for="type in typesConsumption">{{type.name + type.icon}}: {{summary(type)}}</p>           			
+	                		<p v-for="type in categories">{{type.name + type.icon}}: {{summary(type)}}</p>           			
 	            		</div>            		
 	            		<div class="list-element">
 	                		<p class="list-element__name">Всего потрачено: {{summary(false)}}</p>          			
@@ -85,7 +85,7 @@
 	        <div class="col-3 col-md-6 col-sm-12">
 	        	<div class="col-grid" v-if="transactionsLoad.load">
 	        		<CreateEvent :month="month"/>
-	        		<button class="crm-btn" @click="modalShow = true">Добавить / изменить тип расходов</button>
+	        		<button class="crm-btn" @click="createCategories = true">Добавить / изменить тип расходов</button>
 	        	</div>
 	            <div class="col-grid grid-loader-box" v-else>
 	            	<div class="grid-loader-box__loader">
@@ -142,6 +142,7 @@
 	    	</div>
 	    </div>
 	    <ConfirmAction v-if="modalShow" @confirm="confirmationNotification()" :deleteFunction="deleteFunction" @сancel="modalShow = false" />	
+	    <Modal v-if="createCategories" @close="createCategories = false"/>	
 	</div>
 </template>
 
@@ -157,6 +158,7 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import Debts from '@/components/CRM/Debts'
 import ConfirmAction from '@/components/Interface/ConfirmAction'
+import Modal from '@/components/Interface/Modal'
 
 export default{
 	name: 'CRM',
@@ -167,12 +169,13 @@ export default{
 		ChangeType,
 		vueCustomScrollbar,
 		DatePicker,
-		ConfirmAction
+		ConfirmAction,
+		Modal,
 	},
 	computed:{
 	    ...mapGetters([
 	      'money',
-	      'typesConsumption',
+	      'categories',
 	      'income',
 	      'expenses',
 	      'todoList',
@@ -192,7 +195,8 @@ export default{
 			transactionsLoad:{
 				load: false
 			},
-			deleteFunction: null
+			deleteFunction: null,
+			createCategories: false
 		}
 	},
 	methods:{
@@ -214,21 +218,21 @@ export default{
 		},
 		chartCategories(){
 			const labels = []
-			this.typesConsumption.forEach((el)=> {
+			this.categories.forEach((el)=> {
 				labels.push(el.name + el.icon)
 			});
 			return labels
 		},
 		chartColors(){
 			const colors = []
-			this.typesConsumption.forEach((el)=> {
+			this.categories.forEach((el)=> {
 				colors.push(el.chartColor)
 			});
 			return colors			
 		},
 		chartData(){
 			const chartData = []
-			this.typesConsumption.forEach((el)=> {
+			this.categories.forEach((el)=> {
 				chartData.push(this.summary(el,true))
 			});
 			return chartData
@@ -244,7 +248,7 @@ export default{
 	},
 	async created(){
 		this.$store.dispatch('getMoneyCount')
-		this.$store.dispatch('getTypesConsumption')
+		this.$store.dispatch('getCategories')
 		const transactions = await this.$store.dispatch('getTransactions',{date: moment(this.month).format('MM-YYYY')})
 		this.$store.dispatch('setTransactions',transactions)
 		this.transactionsLoad.load = true

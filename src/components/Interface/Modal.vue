@@ -8,7 +8,7 @@
 				</p>
 			</div>
 			<div class="modal-body">
-				<ChangeType />
+				<ChangeType @close="$emit('close')"/>
 			</div>
 		</div>
 	</div>

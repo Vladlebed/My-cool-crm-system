@@ -13,6 +13,7 @@ Vue.config.productionTip = false
 const globalMethods = {
   methods: {
 	formattingTypeName(name,typesList){
+		if(!typesList) return name
 		const resultName = typesList.find(t => t.translite === name) || undefined
 		return resultName ? `${resultName.name} ${resultName.icon}` : name
 	},

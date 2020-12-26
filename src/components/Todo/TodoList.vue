@@ -3,9 +3,9 @@
     	<p class="title" v-if="complited">Выполненные дела: <input type="text" placeholder="Найти" v-model="search"></p>
     	<p class="title" v-else>Список дел: <input type="text" placeholder="Найти" v-model="search"></p>
 	    <vue-custom-scrollbar class="list">
-	    	<div class="list-element" v-for="todo in displayList(todos,search)">
+	    	<div class="list-element" v-for="todo in displayList(todos,search).slice().reverse()">
 	    		<p class="list-element__name">
-	    			{{todo.text}} <i class="fa fa-times" aria-hidden="true"></i>
+	    			{{todo.text}} <i class="fa fa-times" aria-hidden="true" @click="removeTodo(todo.id)"></i>
 	    		</p>
 	    		<p class="list-element__date">
 	    			Создано: {{todo.dateCreate}}
@@ -31,6 +31,7 @@
 	    		Ничего не найдено
 	    	</p>
 	    </vue-custom-scrollbar>
+	    <ConfirmAction v-if="modalShow" @confirm="confirmationNotification()" :deleteFunction="removeFunction" @сancel="canselDelete" />
 	</div>
 </template>
 
@@ -38,11 +39,13 @@
 import moment from 'moment';
 import vueCustomScrollbar from 'vue-custom-scrollbar'
 import "vue-custom-scrollbar/dist/vueScrollbar.css"
+import ConfirmAction from '@/components/Interface/ConfirmAction'
 export default{
 	name:'todoList',
 	props:['complited','todos'],
 	components: {
-		vueCustomScrollbar
+		vueCustomScrollbar,
+		ConfirmAction
 	},
 	methods:{
 		todoComplited(id){
@@ -51,10 +54,30 @@ export default{
 		},
 		changeTodoStatus(id){
 			this.$store.dispatch('changeTodoStatus',{id})
+		},
+		removeTodo(id){
+			this.modalShow = true
+			this.removeFunction = ()=> {
+				this.removeFunction = this.$store.dispatch('removeTodo',id)
+			}
+		},
+		confirmationNotification(){
+			this.modalShow = false
+			this.$notify({
+			  group: 'foo',
+			  type: 'success',
+			  text: 'Объект был удалён'
+			});				
+		},
+		canselDelete(){
+			this.modalShow = false
+			this.removeFunction = null
 		}
 	},
 	data(){
 		return{
+			modalShow: false,
+			removeFunction: null,
 			search: ''
 		}
 	}

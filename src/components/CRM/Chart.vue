@@ -50,7 +50,7 @@ export default {
 		}
 	},
 	mounted(){
-		console.log(this.renderChartData)
+		// console.log(this.renderChartData)
 		this.renderChart(this.renderChartData,this.options)
 	},
 	watch: {

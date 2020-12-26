@@ -141,9 +141,7 @@
 	    		</div>
 	    	</div>
 	    </div>
-	    <transition name="fade" mode="out-in">
-	    	<Modal v-if="modalShow" @close="modalShow = false"/>
-	    </transition>	
+	    <ConfirmAction v-if="modalShow" @confirm="confirmationNotification()" :deleteFunction="deleteFunction" @сancel="modalShow = false" />	
 	</div>
 </template>
 
@@ -158,7 +156,7 @@ import moment from 'moment'
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import Debts from '@/components/CRM/Debts'
-import Modal from '@/components/Interface/Modal'
+import ConfirmAction from '@/components/Interface/ConfirmAction'
 
 export default{
 	name: 'CRM',
@@ -169,7 +167,7 @@ export default{
 		ChangeType,
 		vueCustomScrollbar,
 		DatePicker,
-		Modal
+		ConfirmAction
 	},
 	computed:{
 	    ...mapGetters([
@@ -193,7 +191,8 @@ export default{
 			modalShow: false,
 			transactionsLoad:{
 				load: false
-			}
+			},
+			deleteFunction: null
 		}
 	},
 	methods:{
@@ -233,24 +232,34 @@ export default{
 				chartData.push(this.summary(el,true))
 			});
 			return chartData
+		},
+		confirmationNotification(){
+			this.modalShow = false
+			this.$notify({
+			  group: 'foo',
+			  type: 'success',
+			  text: 'Объект был удалён'
+			});				
 		}
 	},
 	async created(){
 		this.$store.dispatch('getMoneyCount')
 		this.$store.dispatch('getTypesConsumption')
-		await this.$store.dispatch('getTransactions',{date: moment(this.month).format('MM-YYYY')})
+		const transactions = await this.$store.dispatch('getTransactions',{date: moment(this.month).format('MM-YYYY')})
+		this.$store.dispatch('setTransactions',transactions)
 		this.transactionsLoad.load = true
 	},
 	mounted(){
-		
+		console.log(this.month)
 	},
 	watch:{
-		month: function () {
-			this.$store.dispatch('getTransactions',{date: moment(this.month).format('MM-YYYY')})
+		 month: async function () {
+			const transactions = await this.$store.dispatch('getTransactions',{date: moment(this.month).format('MM-YYYY')})
+			await this.$store.dispatch('setTransactions',transactions)
+			console.log(transactions)
 		},
 		money: function(oldValue,newValue) {
 			if(oldValue != newValue){
-				console.log('запуск!')
 				this.$store.dispatch('setMoneyCount', this.money)
 			}
 		}

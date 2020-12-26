@@ -93,14 +93,12 @@ export default new Vuex.Store({
 						})					
 					})
 				}
-				state.income = transactionsIncomeArray || []
-				state.expenses = transactionsExpensesArray || []
+				state.income = transactionsIncomeArray
+				state.expenses = transactionsExpensesArray
 			} else {
-				state.income.length = 0
-				state.expenses.length = 0
-				console.log(state.income)
+				state.income = []
+				state.expenses = []
 			}
-
 		},
 		setTypesConsumption(state,typesConsumption){
 			state.typesConsumption = typesConsumption
@@ -225,11 +223,14 @@ export default new Vuex.Store({
 			try {
 				const uid = await dispatch('getUid')
 				const transactions = (await firebase.database().ref(`/users/${uid}/transactions/${date}`).once('value')).val()
-				commit('setTransactions',transactions)
-				return true
+				// commit('setTransactions',transactions)
+				return transactions
 			} catch(e) {
 				console.log(e);
 			}			
+		},
+		setTransactions({commit},transactions){
+			commit('setTransactions',transactions)
 		},
 		getUid(){
 			const user = firebase.auth().currentUser
@@ -273,7 +274,9 @@ export default new Vuex.Store({
 		editTodo({commit},id,todo){
 			commit('editTodo',id,todo)
 		},
-		removeTodo({commit},id){
+		async removeTodo({dispatch,commit},id){
+			const uid = await dispatch('getUid')
+			await firebase.database().ref(`/users/${uid}/todo/${id}`).remove()
 			commit('removeTodo',id)
 		},
 		changeDebt({commit},id,value,date){

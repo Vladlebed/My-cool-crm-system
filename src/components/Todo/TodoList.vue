@@ -3,7 +3,7 @@
     	<p class="title" v-if="complited">Выполненные дела: <input type="text" placeholder="Найти" v-model="search"></p>
     	<p class="title" v-else>Список дел: <input type="text" placeholder="Найти" v-model="search"></p>
 	    <vue-custom-scrollbar class="list">
-	    	<div class="list-element" v-for="todo in displayList(todos,search).slice().reverse()">
+	    	<div class="list-element" v-for="todo in displayTodoList()">
 	    		<p class="list-element__name">
 	    			{{todo.text}} <i class="fa fa-times" aria-hidden="true" @click="removeTodo(todo.id)"></i>
 	    		</p>
@@ -72,6 +72,11 @@ export default{
 		canselDelete(){
 			this.modalShow = false
 			this.removeFunction = null
+		},
+		displayTodoList(){
+			const todoList = this.displayList(this.todos,this.search)
+			if(todoList) return todoList.slice().reverse()
+			else return []
 		}
 	},
 	data(){

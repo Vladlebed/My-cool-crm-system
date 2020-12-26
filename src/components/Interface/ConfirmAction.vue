@@ -44,6 +44,7 @@ export default {
 		display: flex
 		justify-content: center
 		align-items: center
+		z-index: 100
 	.confirm-element
 		width: 350px
 		height: 120px

@@ -7,13 +7,14 @@ export default{
 	},
 	mutations:{
 		async createEvent(state,event){
+			console.log(event)
 			if(event.body.isIncome) {
 				state.income.push(event.body) 
-				state.money += event.body.value
+				state.money += +event.body.value
 				await firebase.database().ref(`/users/${event.uid}/transactions/${event.month}/income`).push(event.body)
 			} else {
 				state.expenses.push(event.body)
-				state.money -= event.body.value
+				state.money -= +event.body.value
 				await firebase.database().ref(`/users/${event.uid}/transactions/${event.month}/expenses`).push(event.body)
 			}
 		},

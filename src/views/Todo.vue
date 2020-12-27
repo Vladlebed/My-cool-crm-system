@@ -1,13 +1,15 @@
 <template>
 	<div class="Todo">
+		<div class="row">
+			<CreateTodo /> 
+		</div>
 	    <div class="row">
-	        <div class="col-4 col-md-6 col-sm-12">
+	        <div class="col-6 col-sm-12">
 	            <div class="col-grid">
 	                <TodoList :complited="false" :todos="displayTodo(false)"/>
 	            </div>
 	        </div>
-	        <CreateTodo /> 
-	        <div class="col-4 col-md-6 col-sm-12">
+	        <div class="col-6 col-sm-12">
 	            <div class="col-grid">
 	                <TodoList :complited="true" :todos="displayTodo(true)"/>
 	            </div>

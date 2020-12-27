@@ -4,9 +4,13 @@
     	<p class="title" v-else>Список дел: <input type="text" placeholder="Найти" v-model="search"></p>
 	    <vue-custom-scrollbar class="list">
 	    	<div class="list-element" v-for="todo in displayTodoList()">
-	    		<p class="list-element__name">
-	    			{{todo.text}} <i class="fa fa-times" aria-hidden="true" @click="removeTodo(todo.id)"></i>
-	    		</p>
+	    		<div class="list-element__name">
+	    			<span>{{todo.text}}</span>
+	    			<span>
+	    				<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+	    				<i class="fa fa-times" aria-hidden="true" @click="removeTodo(todo.id)"></i>
+	    			</span>
+	    		</div>
 	    		<p class="list-element__date">
 	    			Создано: {{todo.dateCreate}}
 	    		</p>
@@ -22,7 +26,6 @@
 		    		</button>
 	    		</template>
 	    	</div>
-
 	    	<div v-if="!todos.length">
 	    		<p v-if="complited">Ничо не сделал :(</p>
 	    		<p v-else>Дел нету, сижу пержу</p>
@@ -92,4 +95,7 @@ export default{
 <style lang="sass" scoped>
 	.list
 		height: 80vh
+		.list-element
+			&__name
+
 </style>

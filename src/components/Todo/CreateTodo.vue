@@ -1,5 +1,5 @@
 <template>
-	<div class="col-3 col-md-6 col-sm-12">
+	<div class="col-6 col-md-12">
 		<div class="col-grid col-grid--auto-height">
 			<p class="title">Создать задание</p>
 			<form @submit.prevent="addTodo">

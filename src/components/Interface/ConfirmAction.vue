@@ -46,7 +46,6 @@ export default {
 		align-items: center
 		z-index: 100
 	.confirm-element
-		width: 350px
 		height: 120px
 		background: #fff
 		border-radius: 15px

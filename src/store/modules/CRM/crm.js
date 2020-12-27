@@ -25,7 +25,6 @@ export default{
 						id: key
 					})					
 				})
-				console.log(categoriesArray)
 				state.categories = categoriesArray
 			} else {
 				state.categories = []
@@ -46,7 +45,6 @@ export default{
 			try {
 				const uid = await dispatch('getUid')
 				const categories = (await firebase.database().ref(`/users/${uid}/categories`).once('value')).val()
-				console.log(categories)
 				commit('setCategories',categories)
 			} catch(e) {
 				console.log(e);
@@ -54,7 +52,6 @@ export default{
 		},
 		async createCategory({dispatch,commit},category){
 			try {
-				console.log(category)
 				const uid = await dispatch('getUid')
 				await firebase.database().ref(`/users/${uid}/categories`).push(category)
 				dispatch('getCategories')

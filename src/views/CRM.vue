@@ -9,6 +9,17 @@
 		</div>
 	    <div class="row">
 	        <div class="col-3 col-md-6 col-sm-12">
+	        	<div class="col-grid" v-if="transactionsLoad.load">
+	        		<CreateEvent :month="month"/>
+	        		<button class="crm-btn" @click="createCategories = true">Добавить / изменить тип расходов</button>
+	        	</div>
+	            <div class="col-grid grid-loader-box" v-else>
+	            	<div class="grid-loader-box__loader">
+	            		
+	            	</div>
+	            </div>
+	        </div>
+	        <div class="col-3 col-md-6 col-sm-12">
 	            <div class="col-grid" v-if="transactionsLoad.load">
 	                <p class="title">Мои доходы: <input type="text" placeholder="Поиск" v-model="searchIncome"></p>
 	                <vue-custom-scrollbar class="list">
@@ -76,17 +87,6 @@
 	            		</div>
 	            	</vue-custom-scrollbar>
 	            </div>
-	            <div class="col-grid grid-loader-box" v-else>
-	            	<div class="grid-loader-box__loader">
-	            		
-	            	</div>
-	            </div>
-	        </div>
-	        <div class="col-3 col-md-6 col-sm-12">
-	        	<div class="col-grid" v-if="transactionsLoad.load">
-	        		<CreateEvent :month="month"/>
-	        		<button class="crm-btn" @click="createCategories = true">Добавить / изменить тип расходов</button>
-	        	</div>
 	            <div class="col-grid grid-loader-box" v-else>
 	            	<div class="grid-loader-box__loader">
 	            		
@@ -254,18 +254,18 @@ export default{
 		this.transactionsLoad.load = true
 	},
 	mounted(){
-		console.log(this.month)
+
 	},
 	watch:{
-		 month: async function () {
+		month: async function () {
 			const transactions = await this.$store.dispatch('getTransactions',{date: moment(this.month).format('MM-YYYY')})
 			await this.$store.dispatch('setTransactions',transactions)
-			console.log(transactions)
 		},
 		money: function(oldValue,newValue) {
-			if(oldValue != newValue){
-				this.$store.dispatch('setMoneyCount', this.money)
-			}
+			console.log(oldValue,newValue)
+			// if(oldValue != newValue){
+			// 	this.$store.dispatch('setMoneyCount', this.money)
+			// }
 		}
 	}
 }

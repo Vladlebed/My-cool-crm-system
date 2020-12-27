@@ -1,0 +1,25 @@
+[debug] [2020-12-26T15:40:16.717Z] ----------------------------------------------------------------------
+[debug] [2020-12-26T15:40:16.720Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\KPblCA\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2020-12-26T15:40:16.721Z] CLI Version:   9.1.0
+[debug] [2020-12-26T15:40:16.721Z] Platform:      win32
+[debug] [2020-12-26T15:40:16.721Z] Node Version:  v14.15.1
+[debug] [2020-12-26T15:40:16.726Z] Time:          Sat Dec 26 2020 19:40:16 GMT+0400 (Самарское стандартное время)
+[debug] [2020-12-26T15:40:16.726Z] ----------------------------------------------------------------------
+[debug] [2020-12-26T15:40:16.726Z] 
+[debug] [2020-12-26T15:40:16.756Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-12-26T15:40:16.757Z] > authorizing via signed-in user
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\KPblCA\Desktop\VUE\My-cool-crm-system
+
+Before we get started, keep in mind:
+
+  * You are initializing in an existing Firebase project directory
+

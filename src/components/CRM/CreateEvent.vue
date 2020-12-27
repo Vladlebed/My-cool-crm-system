@@ -24,7 +24,7 @@
 				<option :value="null" disabled>Выбери категорию</option>
 
 				<template v-if="isIncome != 'debt' && isIncome != 'debtRefund'">
-					<option v-for="(type,i) in Categories" :value="type.translite" :selected="!i">
+					<option v-for="(type,i) in categories" :value="type.translite" :selected="!i">
 						{{type.name + type.icon}}
 					</option>
 				</template>
@@ -55,7 +55,7 @@ export default{
 	props:['month'],
 	computed:{
 	    ...mapGetters([
-	      'Categories',
+	      'categories',
 	      'randomMoments',
 	    ])
 	},
@@ -88,7 +88,6 @@ export default{
 				this.notifyForRequiredFields('Значением может быть только число')
 				return false
 			}
-			console.log('Validate complite')
 			if(this.isIncome) {
 				if(this.isIncome === 'debt'){
 					const event = {
@@ -100,7 +99,8 @@ export default{
 						complited: false
 					}
 					console.log(event)
-					this.$store.dispatch('addDebts',event).then(()=> {
+					this.$store.dispatch('addDebts',event)
+					.then(()=> {
 						this.name = null
 						this.value = null
 						this.text = null
@@ -118,7 +118,8 @@ export default{
 						complited: false
 					}
 					console.log(event)
-					this.$store.dispatch('addDebtsIcnome',event).then(()=> {
+					this.$store.dispatch('addDebtsIcnome',event)
+					.then(()=> {
 						this.name = null
 						this.value = null
 						this.text = null
@@ -135,9 +136,10 @@ export default{
 							uid: null,
 							isIncome: this.isIncome ? true : false
 						},
-						month: moment(this.month).format('MM-YYYY')
+						month: moment(new Date()).format('MM-YYYY')
 					}
-					this.$store.dispatch('createEvent',event).then(()=> {
+					this.$store.dispatch('createEvent',event)
+					.then(()=> {
 						this.name = null
 						this.value = null
 						this.date = moment(new Date()).format('DD.MM.YYYY')
@@ -155,9 +157,10 @@ export default{
 						uid: null,
 						isIncome: this.isIncome ? true : false						
 					},
-					month: moment(this.month).format('MM-YYYY')
+					month: moment(new Date()).format('MM-YYYY')
 				}
-				this.$store.dispatch('createEvent',event,event,moment(this.month).format('MM-YYYY')).then(()=> {
+				this.$store.dispatch('createEvent',event)
+				.then(()=> {
 					this.name = null
 					this.value = null
 					this.date = moment(new Date()).format('DD.MM.YYYY')

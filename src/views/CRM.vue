@@ -19,53 +19,9 @@
 	            	</div>
 	            </div>
 	        </div>
-	        <div class="col-3 col-md-6 col-sm-12">
-	            <div class="col-grid" v-if="transactionsLoad.load">
-	                <p class="title">Мои доходы: <input type="text" placeholder="Поиск" v-model="searchIncome"></p>
-	                <vue-custom-scrollbar class="list">
-	                	<div class="list-element" v-for="incomeElement in displayList(income,searchIncome).slice().reverse()">
-	                		<p class="list-element__name">{{incomeElement.name}} <i class="fa fa-times" aria-hidden="true"></i></p>
-	                		<p>Сумма: {{moneyFormatting(incomeElement.value)}}</p>
-	                		<p>Дата: {{incomeElement.date}}</p>
-	                	</div>
-	                	<div class="list-element" v-if="!income.length">
-	                		<p>Доходов нет</p>                		
-	                	</div>
-	                	<div class="list-element" v-if="income.length && !displayList(income,searchIncome).length">
-	                		<p>Ничего не найдено</p>                		
-	                	</div>
-	                </vue-custom-scrollbar>
-	            </div>
-	            <div class="col-grid grid-loader-box" v-else>
-	            	<div class="grid-loader-box__loader">
-	            		
-	            	</div>
-	            </div>
-	        </div>
-	        <div class="col-3 col-md-6 col-sm-12">
-	            <div class="col-grid" v-if="transactionsLoad.load">
-	                <p class="title">Мои расходы: <input type="text" placeholder="Поиск" v-model="searchExpenses"></p>
-	                <vue-custom-scrollbar class="list">
-	                	<div class="list-element" v-for="expenditure in displayList(expenses,searchExpenses).slice().reverse()">
-	                		<p class="list-element__name">{{expenditure.name}} <i class="fa fa-times" aria-hidden="true"></i></p>
-	                		<p>Сумма: {{moneyFormatting(expenditure.value)}}</p>
-	                		<p>На что: {{`${formattingTypeName(expenditure.type,categories)}`}}</p>
-	                		<p>Дата: {{expenditure.date}}</p>                		
-	                	</div>
-	                	<div class="list-element" v-if="!expenses.length">
-	                		<p>Расходов нет</p>                		
-	                	</div>
-	                	<div class="list-element" v-if="expenses.length && !displayList(expenses,searchExpenses).length">
-	                		<p>Ничего не найдено</p>                		
-	                	</div>
-	                </vue-custom-scrollbar>
-	            </div>
-	            <div class="col-grid grid-loader-box" v-else>
-	            	<div class="grid-loader-box__loader">
-	            		
-	            	</div>
-	            </div>
-	        </div>
+	        <incomeList :isLoad="transactionsLoad.load"/>
+	        <expensesList :isLoad="transactionsLoad.load"/>
+
 	        <div class="col-3 col-md-6 col-sm-12">
 	            <div class="col-grid" v-if="transactionsLoad.load">
 	            	<vue-custom-scrollbar class="list height-auto">
@@ -134,12 +90,7 @@
 	    	<div class="col-4 col-sm-12">
 	    		<Debts v-if="transactionsLoad.load" :income="true"/>
 	    	</div>
-	    	<div class="col-4 col-sm-12">
-	    		<div class="col-grid">
-	    			<p class="title">Заметки</p>
-	    			<textarea name="" id="" cols="30" rows="10" class="notes" placeholder="Ну и нафига они нужны?"></textarea>
-	    		</div>
-	    	</div>
+	    	<Notes />
 	    </div>
 	    <ConfirmAction v-if="modalShow" @confirm="confirmationNotification()" :deleteFunction="deleteFunction" @сancel="modalShow = false" />	
 	    <Modal v-if="createCategories" @close="createCategories = false"/>	
@@ -159,6 +110,9 @@ import 'vue2-datepicker/index.css'
 import Debts from '@/components/CRM/Debts'
 import ConfirmAction from '@/components/Interface/ConfirmAction'
 import Modal from '@/components/Interface/Modal'
+import incomeList from '@/components/CRM/incomeList'
+import expensesList from '@/components/CRM/expensesList'
+import Notes from '@/components/CRM/Notes'
 
 export default{
 	name: 'CRM',
@@ -171,6 +125,9 @@ export default{
 		DatePicker,
 		ConfirmAction,
 		Modal,
+		incomeList,
+		expensesList,
+		Notes
 	},
 	computed:{
 	    ...mapGetters([
@@ -179,7 +136,6 @@ export default{
 	      'income',
 	      'expenses',
 	      'todoList',
-	      'todoIdCount'
 	    ])
 	},
 	filters: {
@@ -189,18 +145,22 @@ export default{
 		return{
 			isLoad: true,
 			month: new Date(),
-			searchIncome: '',
-			searchExpenses: '',
+			search: {
+				income: '',
+				expenses: ''
+			},
 			modalShow: false,
 			transactionsLoad:{
 				load: false
 			},
 			deleteFunction: null,
-			createCategories: false
+			createCategories: false,
+			notes: ''
 		}
 	},
 	methods:{
 		summary(type,noFormating){
+			console.log('run')
 			let result = 0
 			if(type){
 				this.expenses.forEach(el => {
@@ -244,7 +204,7 @@ export default{
 			  type: 'success',
 			  text: 'Объект был удалён'
 			});				
-		}
+		},
 	},
 	async created(){
 		this.$store.dispatch('getMoneyCount')
@@ -263,10 +223,10 @@ export default{
 		},
 		money: function(oldValue,newValue) {
 			console.log(oldValue,newValue)
-			// if(oldValue != newValue){
-			// 	this.$store.dispatch('setMoneyCount', this.money)
-			// }
-		}
+			if(oldValue != newValue){
+				this.$store.dispatch('setMoneyCount', this.money)
+			}
+		},
 	}
 }
 </script>
@@ -295,13 +255,6 @@ export default{
 			border-top: 4px solid transparent
 			animation: speen .7s linear infinite
 			border-radius: 50%
-	.notes
-		width: 100%
-		max-height: 100%
-		padding: 15px 0
-		font-size: 16px
-		font-family: 'Inter', sans-serif;
-		font-weight: 600
 </style>
 
 <style lang="scss">

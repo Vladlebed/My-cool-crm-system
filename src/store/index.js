@@ -12,15 +12,29 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-
+		menu:[
+			{name: 'CRM',route:'/apps/crm',classIcon:'fa-credit-card-alt'},
+			{name: 'Todo',route:'/apps/todo',classIcon:'fa-list-alt'},
+		]
 	},
 	mutations: {
-
+		setAppInMenu(state,appData){
+			state.menu.push(appData)
+		},
+		removeAppInMenu(state,appName){
+			state.menu.splice(state.menu.findIndex(t=> t.name === appName),1)
+		}
 	},
 	actions: {
 		getUid(){
 			const user = firebase.auth().currentUser
 			return user ? user.uid : null
+		},
+		setAppInMenu({commit},appData){
+			commit('setAppInMenu',appData)
+		},
+		removeAppInMenu({commit},appName){
+			commit('removeAppInMenu',appName)
 		},
 	},
 	modules: {
@@ -29,6 +43,6 @@ export default new Vuex.Store({
 		todo,
 	},
 	getters:{
-
+		getMenu: s=> s.menu
 	}
 })

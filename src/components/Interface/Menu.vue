@@ -6,30 +6,35 @@
 					<i class="fa fa-home" aria-hidden="true"></i>
 				</div>
 				<span class="link__text">Home</span>
+<!-- 				<span class="link__note">
+					<i class="fa fa-bell" aria-hidden="true"></i>
+				</span> -->
 			</router-link>
-			<router-link class="menu__element link" to="/crm" active-class="active">
+			<!-- Список добавленных приложений -->
+
+			<router-link v-for="app in getMenu" class="menu__element link" :to="app.route" active-class="active">
 				<div class="link__icon">
-					<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+					<i class="fa" :class="app.classIcon"  aria-hidden="true"></i>
 				</div>
-				<span class="link__text">CRM</span>
+				<span class="link__text">{{app.name}}</span>
 			</router-link>
-			<router-link class="menu__element link" to="/todo" active-class="active">
+<!-- 			<router-link class="menu__element link" to="/todo" active-class="active">
 				<div class="link__icon">
 					<i class="fa fa-list-ol" aria-hidden="true"></i>
 				</div>
 				<span class="link__text">Todo</span>
-			</router-link>
-			<router-link class="menu__element link" to="/apps" active-class="active">
-				<div class="link__icon">
-					<i class="fa fa-rocket" aria-hidden="true"></i>
-				</div>
-				<span class="link__text">Apps</span>
 			</router-link>
 			<router-link class="menu__element link" to="/goals-and-dreams" active-class="active">
 				<div class="link__icon">
 					<i class="fa fa-heart" aria-hidden="true"></i>
 				</div>
 				<span class="link__text">Dream</span>
+			</router-link> -->
+			<router-link class="menu__element link" to="/apps" active-class="active" exact>
+				<div class="link__icon">
+					<i class="fa fa-rocket" aria-hidden="true"></i>
+				</div>
+				<span class="link__text">Apps</span>
 			</router-link>
 			<div class="menu__element link bottom" @click.prevent="logout" active-class="active">
 				<div class="link__icon">
@@ -42,8 +47,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default{
 	name: 'Menu',
+	computed:{
+	    ...mapGetters([
+	      'getMenu',
+	    ])
+	},
 	data(){
 		return {
 
@@ -65,7 +76,7 @@ export default{
 		left: 0
 		top: 0
 		height: 100vh
-		width: 60px
+		width: 75px
 		background: var(--grid)
 		padding: 0 5px
 		display: flex
@@ -81,6 +92,7 @@ export default{
 		.link
 			margin-bottom: 15px
 			text-align: center
+			position: relative
 			&.active
 				.link__icon
 					background: var(--dark)
@@ -95,9 +107,24 @@ export default{
 				justify-content: center
 				font-size: 25px
 				border-radius: 50%
+				margin: 0 auto
 			&__text
 				color: var(--dark)
 			&.bottom
 				margin-top: auto
+			&__note
+				position: absolute
+				right: 0px
+				top: 0px
+				border-radius: 50%
+				background: #F41A1A
+				width: 20px
+				height: 20px
+				display: flex
+				justify-content: center
+				align-items: center
+				.fa
+					color: var(--text-other)
+					font-size: 12px
 	@import '@/assets/style/_menuMobile.sass'
 </style>	

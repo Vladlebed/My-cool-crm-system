@@ -3,8 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
-import CRM from '../views/CRM.vue'
-import Todo from '../views/Todo.vue'
+import Apps from '../views/Apps.vue'
+import AppsList from './AppsList.js'
 import GoalsAndDreams from '../views/GoalsAndDreams.vue'
 import Bad from '../views/Bad.vue'
 import firebase from 'firebase/app'
@@ -27,19 +27,14 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
-  },  
+  },
   {
-    path: '/crm',
-    name: 'CRM',
+    path: '/apps',
+    name: 'Apps',
     meta: {layout: 'main', auth: true},
-    component: CRM
-  },   
-  {
-    path: '/todo',
-    name: 'Todo',
-    meta: {layout: 'main', auth: true},
-    component: Todo
-  },    
+    component: Apps
+  },
+  ...AppsList,    
   {
     path: '/goals-and-dreams',
     name: 'Goals-and-Dreams',

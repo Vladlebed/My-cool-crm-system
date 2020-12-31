@@ -38,9 +38,6 @@ export default{
             await this.$store.dispatch('logout')
             this.$router.push('/login')
         }
-    },
-    mounted(){
-
     }
 }
 </script>
@@ -78,18 +75,19 @@ body
     font-weight: 500
     font-size: 18px
 
-
 .fade-enter, .fade-leave-to 
   opacity: 0
   transform: translateX(2em)
-
 
 .fade-enter-active, .fade-leave-active
   transition: all .3s ease
 #app
     min-height: 100vh
     background: var(--background)
-
+    background-image: url('./assets/head.png')
+    background-size: contain
+    background-position: top center
+    background-repeat: no-repeat
 .full-screen
     height: 100vh
     display: flex

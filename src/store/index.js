@@ -7,6 +7,7 @@ import moment from 'moment'
 import CRM from '@/store/modules/CRM/crm'
 import todo from '@/store/modules/Todo/todo'
 import auth from '@/store/modules/auth'
+import Notes from '@/store/modules/apps/notes'
 
 Vue.use(Vuex)
 
@@ -41,6 +42,7 @@ export default new Vuex.Store({
 		auth,
 		CRM,
 		todo,
+		Notes
 	},
 	getters:{
 		getMenu: s=> s.menu

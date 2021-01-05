@@ -51,7 +51,7 @@
 	        </div>
 	    </div>
 	    <div class="row">
-	    	<div class="col-8 col-md-12">
+<!-- 	    	<div class="col-8 col-md-12">
 	    		<div class="col-grid" v-if="transactionsLoad.load" >
 	    			<p class="title">Общий график: </p>
 	    			<div class="chart-box">
@@ -63,6 +63,13 @@
 	            		
 	            	</div>
 	            </div>	    		
+	    	</div> -->
+
+	    	<div class="col-4 col-sm-12">
+	    		<Debts v-if="transactionsLoad.load" :income="false"/>
+	    	</div>
+	    	<div class="col-4 col-sm-12">
+	    		<Debts v-if="transactionsLoad.load" :income="true"/>
 	    	</div>
 	    	<div class="col-4 col-sm-12">
 	    		<div class="col-grid" v-if="transactionsLoad.load" >
@@ -84,12 +91,6 @@
 	    	</div>
 	    </div>
 	    <div class="row">
-	    	<div class="col-4 col-sm-12">
-	    		<Debts v-if="transactionsLoad.load" :income="false"/>
-	    	</div>
-	    	<div class="col-4 col-sm-12">
-	    		<Debts v-if="transactionsLoad.load" :income="true"/>
-	    	</div>
 	    	<Notes />
 	    </div>
 	    <ConfirmAction v-if="modalShow" @confirm="confirmationNotification()" :deleteFunction="deleteFunction" @сancel="modalShow = false" />	

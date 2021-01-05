@@ -11,185 +11,28 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-3 col-md-6 col-sm-12 flipper-container">
+					<div class="col-3 col-md-6 col-sm-12 flipper-container" v-for="app in appsList">
 						<router-link to="/apps/notes">
 							<div class="col-grid card">
 								<div class="card__front">
-									<p class="card__title">Заметки</p>
-									<i class="fa fa-sticky-note-o card__icon" aria-hidden="true"></i>
+									<p class="card__title">{{app.name}}</p>
+									<i class="fa card__icon" :class="app.classIcon" aria-hidden="true"></i>
 								</div>
 								<div class="card__back">
-									<p class="card__title title-back">Записывай, создавай, редактируй!</p>
+									<p class="card__title title-back">{{app.description}}</p>
 									<button class="card__btn" 
-										@click.prevent="setAppInMenu({name: 'Заметки',route:'/apps/notes',classIcon:'fa-sticky-note-o'})"
-										v-if="!getMenu.find(t=> t.name === 'Заметки')"
+										@click.prevent="setAppInMenu({name: app.name, route: app.route, classIcon: app.classIcon})"
+										v-if="!getMenu.find(t=> t.name === app.name)"
 									>
 										Добавить в меню
 									</button>
 									<button 
 										class="card__btn" 
-										@click.prevent="removeAppInMenu('Заметки')"
+										@click.prevent="removeAppInMenu(app.name)"
 										v-else
 									>
 										Убрать из меню
 									</button>
-								</div>
-							</div>						
-						</router-link>
-					</div>
-					<div class="col-3 col-md-6 col-sm-12 flipper-container">
-						<router-link to="/apps/calc">
-							<div class="col-grid card">
-								<div class="card__front">
-									<p class="card__title">Калькулятор</p>
-									<i class="fa fa-calculator card__icon" aria-hidden="true"></i>
-								</div>
-								<div class="card__back">
-									<p class="card__title title-back">Всевозможные решения нерешаемых проблем!</p>
-									<button class="card__btn" 
-										@click.prevent="setAppInMenu({name: 'Calc',route:'/apps/calc',classIcon:'fa-calculator'})"
-										v-if="!getMenu.find(t=> t.name === 'Calc')"
-									>
-										Добавить в меню
-									</button>
-									<button class="card__btn" 
-										@click.prevent="removeAppInMenu('Calc')"
-										v-else
-									>
-										Убрать из меню
-									</button>
-								</div>
-							</div>						
-						</router-link>
-					</div>
-					<div class="col-3 col-md-6 col-sm-12 flipper-container">
-						<router-link to="/apps/timer">
-							<div class="col-grid card">
-								<div class="card__front">
-									<p class="card__title">Секундомер</p>
-									<i class="fa fa-clock-o card__icon" aria-hidden="true"></i>
-								</div>
-								<div class="card__back">
-									<p class="card__title title-back">Очень полезен, например для замеров скорости сборки кубика рубика. Вжух!</p>
-									<button class="card__btn" 
-										@click.prevent="setAppInMenu({name: 'Timer',route:'/apps/timer',classIcon:'fa-clock-o'})"
-										v-if="!getMenu.find(t=> t.name === 'Timer')"
-										>
-										Добавить в меню
-									</button>
-									<button 
-										class="card__btn" 
-										@click.prevent="removeAppInMenu('Timer')"
-										v-else
-										>
-										Убрать из меню
-									</button>
-								</div>
-							</div>						
-						</router-link>
-					</div>
-					<div class="col-3 col-md-6 col-sm-12 flipper-container">
-						<router-link to="/apps/todo">
-							<div class="col-grid card">
-								<div class="card__front">
-									<p class="card__title">To-Do Лист</p>
-									<i class="fa fa-list-alt card__icon" aria-hidden="true"></i>
-								</div>
-								<div class="card__back">
-									<p class="card__title title-back">Появлились дела? Собираешься в магазин? Заведи свой список дел и отмечай выполненные</p>
-									<button class="card__btn" 
-										@click.prevent="setAppInMenu({name: 'Todo',route:'/apps/todo',classIcon:'fa-list-alt'})"
-										v-if="!getMenu.find(t=> t.name === 'Todo')"
-										>
-										Добавить в меню
-									</button>
-									<button 
-										class="card__btn" 
-										@click.prevent="removeAppInMenu('Todo')"
-										v-else
-										>
-										Убрать из меню
-									</button>
-								</div>
-							</div>						
-						</router-link>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-3 col-md-6 col-sm-12 flipper-container">
-						<router-link to="/apps/dreams">
-							<div class="col-grid card">
-								<div class="card__front">
-									<p class="card__title">Мечты и цели</p>
-									<i class="fa fa-star card__icon" aria-hidden="true"></i>
-								</div>
-								<div class="card__back">
-									<p class="card__title title-back">Создай список стран которые хочешь посетить, запиши в лист своё желание прыгнуть с парашютом или купить себе новую машину и вперёд покорять новые вершины!</p>
-									<button class="card__btn" 
-										@click.prevent="setAppInMenu({name: 'Dreams',route:'/apps/dreams',classIcon:'fa-star'})"
-										v-if="!getMenu.find(t=> t.name === 'Dreams')"
-										>
-										Добавить в меню
-									</button>
-									<button 
-										class="card__btn" 
-										@click.prevent="removeAppInMenu('Dreams')"
-										v-else
-										>
-										Убрать из меню
-									</button>
-								</div>
-							</div>						
-						</router-link>
-					</div>
-					<div class="col-3 col-md-6 col-sm-12 flipper-container">
-						<router-link to="/apps/crm">
-							<div class="col-grid card">
-								<div class="card__front">
-									<p class="card__title">CRM</p>
-									<i class="fa fa-credit-card-alt card__icon" aria-hidden="true"></i>
-								</div>
-								<div class="card__back">
-									<p class="card__title title-back">Начни учёт своих доходов и расходов. Деньги любят счёт</p>
-									<button class="card__btn" 
-										@click.prevent="setAppInMenu({name: 'CRM',route:'/apps/crm',classIcon:'fa-credit-card-alt'})"
-										v-if="!getMenu.find(t=> t.name === 'CRM')"
-										>
-										Добавить в меню
-									</button>
-									<button 
-										class="card__btn" 
-										@click.prevent="removeAppInMenu('CRM')"
-										v-else
-										>
-										Убрать из меню
-									</button>
-								</div>
-							</div>						
-						</router-link>
-					</div>
-					<div class="col-3 col-md-6 col-sm-12 flipper-container">
-						<router-link to="/apps/notes">
-							<div class="col-grid card">
-								<div class="card__front">
-									<p class="card__title">Пустой блок</p>
-								</div>
-								<div class="card__back">
-									<p class="card__title title-back">Lorem ipsum, dolor sit amet consectetur adipisicing, elit. Iste perspiciatis voluptate sunt fugiat, repellat laboriosam beatae, inventore dignissimos suscipit debitis aperiam quasi nemo ab laudantium ducimus quod ullam nulla harum.</p>
-									<button class="card__btn">Добавить в меню</button>
-								</div>
-							</div>						
-						</router-link>
-					</div>
-					<div class="col-3 col-md-6 col-sm-12 flipper-container">
-						<router-link to="/apps/notes">
-							<div class="col-grid card">
-								<div class="card__front">
-									<p class="card__title">Пустой блок</p>
-								</div>
-								<div class="card__back">
-									<p class="card__title title-back">Lorem ipsum, dolor sit amet consectetur adipisicing, elit. Iste perspiciatis voluptate sunt fugiat, repellat laboriosam beatae, inventore dignissimos suscipit debitis aperiam quasi nemo ab laudantium ducimus quod ullam nulla harum.</p>
-									<button class="card__btn">Добавить в меню</button>
 								</div>
 							</div>						
 						</router-link>
@@ -202,6 +45,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default{
 	name: "Apps",
 	computed:{
@@ -211,7 +55,14 @@ export default{
 	},
 	data(){
 		return {
-
+			appsList: [
+				{name: 'Заметки', description: 'Записывай, создавай, редактируй!', route:'/apps/notes',classIcon:'fa-sticky-note-o'},
+				{name: 'Calc', description: 'Всевозможные решения нерешаемых проблем!', route:'/apps/calc', classIcon:'fa-calculator'},
+				{name: 'Timer', description: 'Очень полезен, например для замеров скорости сборки кубика рубика. Вжух!', route:'/apps/timer', classIcon:'fa-clock-o'},
+				{name: 'Todo', description: 'Появлились дела? Собираешься в магазин? Заведи свой список дел и отмечай выполненные', route:'/apps/todo', classIcon:'fa-list-alt'},
+				{name: 'Dreams', description: 'Создай список стран которые хочешь посетить, запиши в лист своё желание прыгнуть с парашютом или купить себе новую машину и вперёд покорять новые вершины!', route:'/apps/dreams', classIcon:'fa-star'},
+				{name: 'CRM', description: 'Начни учёт своих доходов и расходов. Деньги любят счёт', route:'/apps/crm', classIcon:'fa-credit-card-alt'}
+			]
 		}
 	},
 	methods:{

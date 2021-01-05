@@ -24,44 +24,64 @@
 				<p>Загрузка</p>
 			</div>
 		</div>
+		<ConfirmAction v-if="modalShow" @confirm="noteHasRemoved()" :deleteFunction="removeFunction" @сancel="canselRemove" text="Вы уверены что хотите удалить заметку?"/>
 	</div>
 </template>
 
 <script>
 import _ from 'lodash'
+import ConfirmAction from '@/components/Interface/ConfirmAction'
+
 export default{
 	name:'Note',
+	components:{
+		ConfirmAction
+	},
 	data(){
 		return{
 			noteId: this.$router.history.current.params.id,
 			noteName: 'Название заметки',
 			noteValue: 'Пустая заметка',
-			isLoad: false
+			isLoad: false,
+			modalShow: false,
+			removeFunction: null,
 		}
 	},
 	methods:{
 		async updateNote(){
 			await this.$store.dispatch('updateNote',{id:this.noteId,title: this.noteName,text: this.noteValue})
-			console.log('Данные сохранены')
 		},
 		async noteClone(){
 			const id = await this.$store.dispatch('createNote',{title: this.noteName + ' (Clone)', text: this.noteValue})
 			this.$router.push(`/apps/notes/${id}`)			
 		},
 		async removeNote(){
-			await this.$store.dispatch('removeNote',this.noteId)
+			if(this.noteValue){
+				this.modalShow = true
+				this.removeFunction = ()=> {
+					this.removeFunction = this.$store.dispatch('removeNote',this.noteId)
+				}
+			} else {
+				await this.$store.dispatch('removeNote',this.noteId)
+				this.$router.push(`/apps/notes`)
+			}			
+		},
+		noteHasRemoved(){
 			this.$router.push(`/apps/notes`)
+		},
+		canselRemove(){
+			this.modalShow = false
+			this.removeFunction = null
 		}
 	},
 	async created(){
-		this.saveNoteValues = _.debounce(this.updateNote, 1000)
+		this.saveNoteValues = _.debounce(this.updateNote, 700)
 		const note = await this.$store.dispatch('getNote',this.noteId)
 		this.noteName = note[1].title
 		this.noteValue = note[1].text
-		this.isLoad = true
-	},
-	mounted(){
-		
+		setTimeout(()=>{
+			this.isLoad = true
+		},0)
 	},
 	watch:{
 		noteName: function(){
@@ -70,9 +90,6 @@ export default{
 		noteValue: function(){
 			this.isLoad ? this.saveNoteValues() : false
 		},
-		$route: function(){
-
-		}
 	}
 }	
 </script>
@@ -84,6 +101,7 @@ export default{
 		font-family: 'Inter', sans-serif
 		font-size: 25px
 		font-weight: 600
+		width: 100%
 	.note-text
 		font-family: 'Inter', sans-serif
 		font-size: 20px

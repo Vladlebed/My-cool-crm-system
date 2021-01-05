@@ -2,7 +2,7 @@
 	<div class="confirm-window">
 		<div class="confirm-element">
 			<div class="confirm-element__head">
-				<p>Удалить этот элемент?</p>
+				<p>{{text || 'Удалить этот элемент?'}}</p>
 			</div>
 			<div class="confirm-element__btns">
 				<button class="crm-btn" @click="confirm()">Да</button>
@@ -15,7 +15,7 @@
 <script>
 export default {
 	name: 'ConfirmAction',
-	props:['deleteFunction'],
+	props:['deleteFunction','text'],
 	methods:{
 		confirm(){
 			if(this.deleteFunction){
@@ -46,11 +46,10 @@ export default {
 		align-items: center
 		z-index: 100
 	.confirm-element
-		height: 120px
+		min-height: 120px
 		background: #fff
 		border-radius: 15px
 		&__head
-			height: 40px
 			padding: 15px
 			font-size: 20px
 			font-weight: 600

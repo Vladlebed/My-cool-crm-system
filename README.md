@@ -7,10 +7,10 @@ A microservices system to simplify my (maybe your) life
 ## Screenshots
 
 ### CRM
-* ![](//i.ibb.co/820HpRG/crm1.png)  
+* ![](//github.com/Vladlebed/My-cool-crm-system/blob/Screenshots/crm1.PNG)  
 
 ### Apps page
-* ![](//i.ibb.co/M71L4GZ/crm2.png)  
+* ![](//github.com/Vladlebed/My-cool-crm-system/blob/Screenshots/crm2.png)  
 
 [Preview (Need to register)](https://my-cool-crm.web.app/)
 

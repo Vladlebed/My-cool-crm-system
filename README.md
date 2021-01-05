@@ -6,11 +6,11 @@ A microservices system to simplify my (maybe your) life
 
 ## Screenshots
 
-### CRM
-* ![](//github.com/Vladlebed/My-cool-crm-system/blob/Screenshots/crm1.PNG)  
+### CRM  
+* ![crm1](https://user-images.githubusercontent.com/55142008/103711481-f957ba00-4fd0-11eb-88ce-178d9ccc77bd.PNG) 
 
-### Apps page
-* ![](//github.com/Vladlebed/My-cool-crm-system/blob/Screenshots/crm2.png)  
+### Apps page  
+* ![crm2](https://user-images.githubusercontent.com/55142008/103711482-fa88e700-4fd0-11eb-835e-58b0e44b518c.png)
 
 [Preview (Need to register)](https://my-cool-crm.web.app/)
 

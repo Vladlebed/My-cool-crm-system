@@ -27,8 +27,7 @@
 	    		</template>
 	    	</div>
 	    	<div v-if="!todos.length">
-	    		<p v-if="complited">Ничо не сделал :(</p>
-	    		<p v-else>Дел нету, сижу пержу</p>
+	    		<p>Пусто</p>
 	    	</div>
 	    	<p v-else-if="todos.length && !displayList(todos,search).length">
 	    		Ничего не найдено

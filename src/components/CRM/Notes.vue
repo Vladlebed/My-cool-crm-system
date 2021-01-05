@@ -2,7 +2,7 @@
 	<div class="col-4 col-sm-12">
 		<div class="col-grid">
 			<p class="title" @click="getNoteState()">Заметки</p>
-			<textarea name="" id="" cols="30" rows="10" class="notes" placeholder="Ну и нафига они нужны?" v-model="text"></textarea>
+			<textarea name="" id="" cols="30" rows="10" class="notes" placeholder="Напиши что нибудь" v-model="text"></textarea>
 		</div>
 	</div>	
 </template>

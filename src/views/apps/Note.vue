@@ -63,10 +63,15 @@ export default{
 				}
 			} else {
 				await this.$store.dispatch('removeNote',this.noteId)
-				this.$router.push(`/apps/notes`)
+				this.noteHasRemoved()
 			}			
 		},
 		noteHasRemoved(){
+			this.$notify({
+			  group: 'foo',
+			  type: 'success',
+			  text: 'Заметка была удалена'
+			});
 			this.$router.push(`/apps/notes`)
 		},
 		canselRemove(){

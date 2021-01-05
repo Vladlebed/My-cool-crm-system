@@ -41,10 +41,19 @@ export default{
             try {
                 await this.$store.dispatch('register',{email:this.email,password:this.password,name:this.name})
                 .then(()=>{
+                    this.$notify({
+                      group: 'foo',
+                      type: 'success',
+                      text: 'You have been registered'
+                    });
                     this.$router.push('/')
                 })
             } catch(e) {
-                console.log(e);
+                this.$notify({
+                  group: 'foo',
+                  type: 'error',
+                  text: e.message
+                });
             }
 
         }

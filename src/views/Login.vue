@@ -39,9 +39,19 @@ export default{
                 await this.$store.dispatch('login',{email:this.email,password:this.password})
                 .then(()=>{
                     this.$router.push('/')
+                    this.$notify({
+                      group: 'foo',
+                      type: 'success',
+                      text: 'You have successfully logged in'
+                    });
                 })
             } catch(e) {
-                console.log(e);
+                this.password = ''
+                this.$notify({
+                  group: 'foo',
+                  type: 'error',
+                  text: e.message
+                });
             }
 
         }
